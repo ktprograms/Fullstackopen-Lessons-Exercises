@@ -16,6 +16,7 @@ const App = () => {
   const [votes, setVotes] = useState(anecdotes.map(() => 0))
 
   const getRandomInt = (max) => Math.floor(Math.random() * max)
+  const getIndexOfMax = () => votes.indexOf(Math.max(...votes))
 
   const handleVote = () => {
     const copy = [...votes]
@@ -26,14 +27,20 @@ const App = () => {
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>has {votes[selected]} votes</p>
+      <h1>Anecdote of the day</h1>
+      {anecdotes[selected]}
+      <br />
+      has {votes[selected]} votes
+      <br />
       <button onClick={handleVote}>
         vote
       </button>
       <button onClick={handleNext}>
         next anecdote
       </button>
+      
+      <h1>Anecdote with most votes</h1>
+      {anecdotes[getIndexOfMax()]}
     </div>
   )
 }
