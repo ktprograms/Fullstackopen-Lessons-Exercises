@@ -1,4 +1,4 @@
-const Notification = ({ message }) => {
+const Notification = ({ message, isSuccess }) => {
   if (message === null) {
     return null
   }
@@ -12,9 +12,10 @@ const Notification = ({ message }) => {
     marginBottom: 10,
   }
   const successStyle = { ...baseStyle, color: 'green' }
+  const errorStyle = { ...baseStyle, color: 'red' }
 
   return (
-    <div style={successStyle}>
+    <div style={isSuccess ? successStyle : errorStyle}>
       {message}
     </div>
   )

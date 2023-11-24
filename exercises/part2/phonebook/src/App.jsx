@@ -10,7 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [successMessage, setSuccessMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [isSuccessMessage, setIsSuccessMessage] = useState(false) // default value doesn't matter
 
   useEffect(() => {
     notesService
@@ -31,11 +32,20 @@ const App = () => {
         notesService
           .update(foundPerson.id, changedPerson) // TODO: Possible TOCTTOU
           .then((returnedPerson) => {
-            setSuccessMessage(`Updated ${returnedPerson.name}`)
+            setMessage(`Updated ${returnedPerson.name}`)
+            setIsSuccessMessage(true)
             setTimeout(() => {
-              setSuccessMessage(null)
+              setMessage(null)
             }, 5000)
             setPersons(persons.map((person) => person.id !== foundPerson.id ? person : returnedPerson))
+          })
+          .catch(() => {
+            setMessage(`Information of ${changedPerson.name} has already been removed from server`)
+            setIsSuccessMessage(false)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+            setPersons(persons.filter((person) => person.id !== changedPerson.id))
           })
       }
     } else {
@@ -47,9 +57,10 @@ const App = () => {
       notesService
         .create(personObject)
         .then((returnedPerson) => {
-          setSuccessMessage(`Added ${returnedPerson.name}`)
+          setMessage(`Added ${returnedPerson.name}`)
+          setIsSuccessMessage(true)
           setTimeout(() => {
-            setSuccessMessage(null)
+            setMessage(null)
           }, 5000)
           setPersons(persons.concat(returnedPerson))
         })
@@ -85,7 +96,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={message} isSuccess={isSuccessMessage} />
       <Filter filter={filter} onFilterChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
