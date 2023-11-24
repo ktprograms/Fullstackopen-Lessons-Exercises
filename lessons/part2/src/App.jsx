@@ -6,7 +6,7 @@ import Notification from './components/Notification'
 import noteService from './services/notes'
 
 const App = () => {
-  const [notes, setNotes] = useState([])
+  const [notes, setNotes] = useState(null)
   const [newNote, setNewNote] = useState('a new note...')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -18,7 +18,6 @@ const App = () => {
         setNotes(initialNotes)
       })
   }, [])
-  console.log('render', notes.length, 'notes')
   
   const addNote = (event) => {
     event.preventDefault()
@@ -64,6 +63,10 @@ const App = () => {
   const notesToShow = showAll
     ? notes
     : notes.filter((note) => note.important === true)
+
+  if (!notes) {
+    return null
+  }
 
   return (
     <div>
