@@ -1,0 +1,10 @@
+POST http://192.168.1.107:3000/api/notes
+Content-Type: application/json
+
+{
+  "content": "VS Code REST Client is a pretty handy tool",
+  "important": true
+}
+
+###
+GET http://192.168.1.107:3000/api/notes
