@@ -1,0 +1,5 @@
+### Valid person
+GET http://192.168.1.105:3000/api/persons/2
+
+### Nonexistent person
+GET http://192.168.1.105:3000/api/persons/5
