@@ -1,0 +1,21 @@
+### Valid person
+POST http://192.168.1.105:3000/api/persons
+Content-Type: application/json
+
+{
+  "name": "ktprograms",
+  "number": "012-34-56789"
+}
+
+### Valid person with additional fields
+POST http://192.168.1.105:3000/api/persons
+Content-Type: application/json
+
+{
+  "name": "ktprograms",
+  "number": "012-34-56789",
+  "extra": "ignored"
+}
+
+### Check all persons
+GET http://192.168.1.105:3000/api/persons
