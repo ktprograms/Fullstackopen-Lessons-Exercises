@@ -1,4 +1,4 @@
-### Valid person
+### Valid person (run twice for Non-unique name test)
 POST http://192.168.1.105:3000/api/persons
 Content-Type: application/json
 
@@ -15,6 +15,20 @@ Content-Type: application/json
   "name": "ktprograms",
   "number": "012-34-56789",
   "extra": "ignored"
+}
+
+### Invalid person (missing name and number fields)
+POST http://192.168.1.105:3000/api/persons
+Content-Type: application/json
+
+{}
+
+### Invalid person (missing number field)
+POST http://192.168.1.105:3000/api/persons
+Content-Type: application/json
+
+{
+  "name": "ktprograms"
 }
 
 ### Check all persons
