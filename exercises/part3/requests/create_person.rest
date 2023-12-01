@@ -1,5 +1,5 @@
 ### Valid person (run twice for Non-unique name test)
-POST http://192.168.1.105:3000/api/persons
+POST {{host}}/api/persons
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### Valid person with additional fields
-POST http://192.168.1.105:3000/api/persons
+POST {{host}}/api/persons
 Content-Type: application/json
 
 {
@@ -18,13 +18,13 @@ Content-Type: application/json
 }
 
 ### Invalid person (missing name and number fields)
-POST http://192.168.1.105:3000/api/persons
+POST {{host}}/api/persons
 Content-Type: application/json
 
 {}
 
 ### Invalid person (missing number field)
-POST http://192.168.1.105:3000/api/persons
+POST {{host}}/api/persons
 Content-Type: application/json
 
 {
@@ -32,4 +32,4 @@ Content-Type: application/json
 }
 
 ### Check all persons
-GET http://192.168.1.105:3000/api/persons
+GET {{host}}/api/persons
