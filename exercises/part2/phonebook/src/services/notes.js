@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'http://192.168.1.103:3000/persons'
+const baseUrl = '/api/persons'
 
 const getAll = () => {
   return axios.get(baseUrl).then((response) => response.data)
