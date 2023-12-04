@@ -2,4 +2,7 @@
 GET {{host}}/api/notes/656afa95bb54ae7144f5ff97
 
 ### Nonexistent note
+GET {{host}}/api/notes/000000000000000000000000
+
+### Request for malformated id
 GET {{host}}/api/notes/0
