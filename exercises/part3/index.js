@@ -12,6 +12,16 @@ morgan.token('body', (request, response) => {
   }
 })
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+  
+  if (error.name === 'CastError') {
+    return response.status(400).json({ error: 'malformmated id' })
+  }
+
+  next(error)
+}
+
 app.use(cors())
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
@@ -34,11 +44,12 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then((result) => {
       response.status(204).end()
     })
+    .catch((error) => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
@@ -68,6 +79,8 @@ app.post('/api/persons', (request, response) => {
 app.get('/info', (request, response) => {
   response.send(`Phonebook has info for ${persons.length} people<br /><br />${new Date().toString()}`)
 })
+
+app.use(errorHandler)
 
 const PORT = 3000
 app.listen(PORT, () => {
