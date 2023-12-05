@@ -1,4 +1,4 @@
-DELETE {{host}}/api/persons/2
+DELETE {{host}}/api/persons/656ed977595a10cf44269f58
 
 ### Check all persons
 GET {{host}}/api/persons
