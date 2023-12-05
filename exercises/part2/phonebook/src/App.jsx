@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import notesService from './services/notes'
+import personsService from './services/persons'
 import Filter from './components/Filter'
 import Notification from './components/Notification'
 import PersonForm from './components/PersonForm'
@@ -14,7 +14,7 @@ const App = () => {
   const [isSuccessMessage, setIsSuccessMessage] = useState(false) // default value doesn't matter
 
   useEffect(() => {
-    notesService
+    personsService
       .getAll()
       .then((initialPersons) => setPersons(initialPersons))
   }, [])
@@ -29,7 +29,7 @@ const App = () => {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const changedPerson = { ...foundPerson, number: newNumber }
 
-        notesService
+        personsService
           .update(foundPerson.id, changedPerson) // TODO: Possible TOCTTOU
           .then((returnedPerson) => {
             setMessage(`Updated ${returnedPerson.name}`)
@@ -54,7 +54,7 @@ const App = () => {
         number: newNumber
       }
 
-      notesService
+      personsService
         .create(personObject)
         .then((returnedPerson) => {
           setMessage(`Added ${returnedPerson.name}`)
@@ -71,7 +71,7 @@ const App = () => {
 
   const deletePerson = (personToDelete) => {
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
-      notesService
+      personsService
         .remove(personToDelete.id)
         .then(() => {
           setPersons(persons.filter((person) => person.id !== personToDelete.id))
