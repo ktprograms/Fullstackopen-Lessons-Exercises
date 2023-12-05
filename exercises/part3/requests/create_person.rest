@@ -23,12 +23,36 @@ Content-Type: application/json
 
 {}
 
+### Invalid person (name too short and missing number field)
+POST {{host}}/api/persons
+Content-Type: application/json
+
+{
+  "name": "kt"
+}
+
 ### Invalid person (missing number field)
 POST {{host}}/api/persons
 Content-Type: application/json
 
 {
   "name": "ktprograms"
+}
+
+### Invalid person (missing name field)
+POST {{host}}/api/persons
+Content-Type: application/json
+
+{
+  "number": "012-3456789"
+}
+
+### Invalid person (invalid number)
+POST {{host}}/api/persons
+Content-Type: application/json
+
+{
+  "number": "0-1234"
 }
 
 ### Check all persons

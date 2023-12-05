@@ -39,13 +39,17 @@ const App = () => {
             }, 5000)
             setPersons(persons.map((person) => person.id !== foundPerson.id ? person : returnedPerson))
           })
-          .catch(() => {
-            setMessage(`Information of ${changedPerson.name} has already been removed from server`)
+          .catch((error) => {
+            if (error.response.status === 404) {
+              setMessage(`Information of ${changedPerson.name} has already been removed from server`)
+              setPersons(persons.filter((person) => person.id !== changedPerson.id))
+            } else if (error.response.status === 400) {
+              setMessage(error.response.data.error)
+            }
             setIsSuccessMessage(false)
             setTimeout(() => {
               setMessage(null)
             }, 5000)
-            setPersons(persons.filter((person) => person.id !== changedPerson.id))
           })
       }
     } else {
@@ -63,6 +67,13 @@ const App = () => {
             setMessage(null)
           }, 5000)
           setPersons(persons.concat(returnedPerson))
+        })
+        .catch((error) => {
+          setMessage(error.response.data.error)
+          setIsSuccessMessage(false)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         })
     }
     setNewName('')

@@ -13,8 +13,23 @@ mongoose.connect(url)
   })
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minLength: 3,
+    required: true,
+  },
+  number: {
+    type: String,
+    validate: {
+      validator: (number) => {
+        if (!number) return false // check if undefined
+        if (number.length < 8) return false
+
+        return /^\d{2,3}-\d*$/.test(number) // matches pattern of 2-3 digits, '-', digits
+      }
+    },
+    required: true,
+  },
 })
 
 personSchema.set('toJSON', {

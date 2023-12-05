@@ -6,6 +6,25 @@ Content-Type: application/json
   "number": "040-654321"
 }
 
+### Invalid name
+PUT {{host}}/api/persons/656ed977595a10cf44269f58
+Content-Type: application/json
+
+{
+  "name": "kt"
+}
+
+### Invalid number
+PUT {{host}}/api/persons/656ed977595a10cf44269f58
+Content-Type: application/json
+
+{
+  "number": "0-1234"
+}
+
+### Nonexistent person
+PUT {{host}}/api/persons/000000000000000000000000
+
 ### Malformmated id
 PUT {{host}}/api/persons/0
 
