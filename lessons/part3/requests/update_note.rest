@@ -6,6 +6,15 @@ Content-Type: application/json
   "important": true
 }
 
+### Invalid content
+PUT {{host}}/api/notes/656dd3cc52c3afaae6a5c2b5
+Content-Type: application/json
+
+{
+  "content": "lol",
+  "important": true
+}
+
 ### Malformmated id
 PUT {{host}}/api/notes/0
 
