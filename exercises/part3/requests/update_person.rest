@@ -1,0 +1,13 @@
+PUT {{host}}/api/persons/656ed977595a10cf44269f58
+Content-Type: application/json
+
+{
+  "name": "Arto Hellas",
+  "number": "040-654321"
+}
+
+### Malformmated id
+PUT {{host}}/api/persons/0
+
+### Check all persons
+GET {{host}}/api/persons
