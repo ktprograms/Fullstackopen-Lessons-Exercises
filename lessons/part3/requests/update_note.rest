@@ -1,0 +1,13 @@
+PUT {{host}}/api/notes/656dd3cc52c3afaae6a5c2b5
+Content-Type: application/json
+
+{
+  "content": "Browser can only execute JavaScript",
+  "important": true
+}
+
+### Malformmated id
+PUT {{host}}/api/notes/0
+
+### Check all persons
+GET {{host}}/api/notes
