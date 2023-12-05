@@ -33,15 +33,16 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find((person) => person.id === id)
-
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch((error) => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -92,7 +93,10 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-  response.send(`Phonebook has info for ${persons.length} people<br /><br />${new Date().toString()}`)
+  Person.countDocuments({})
+    .then((count) => {
+      response.send(`Phonebook has info for ${count} people<br /><br />${new Date().toString()}`)
+    })
 })
 
 app.use(errorHandler)

@@ -1,5 +1,8 @@
 ### Valid person
-GET {{host}}/api/persons/2
+GET {{host}}/api/persons/656ed977595a10cf44269f58
 
 ### Nonexistent person
-GET {{host}}/api/persons/5
+GET {{host}}/api/persons/000000000000000000000000
+
+### Malformatted id
+GET {{host}}/api/persons/0
