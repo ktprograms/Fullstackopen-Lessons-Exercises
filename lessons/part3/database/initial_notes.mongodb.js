@@ -1,4 +1,4 @@
-/* global use, db */
+/* global use, db, ObjectId */
 
 ////////////////////////////////
 // IMPORTANT                  //
@@ -7,8 +7,8 @@
 // USE WITH CAUTION           //
 ////////////////////////////////
 
-use('noteApp');
-const notes = db.getCollection('notes');
+use('noteApp')
+const notes = db.getCollection('notes')
 
 notes.deleteMany({})
 
