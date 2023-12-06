@@ -26,7 +26,7 @@ const personSchema = new mongoose.Schema({
         if (number.length < 8) return false
 
         return /^\d{2,3}-\d*$/.test(number) // matches pattern of 2-3 digits, '-', digits
-      }
+      },
     },
     required: true,
   },
@@ -37,7 +37,7 @@ personSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
-  }
+  },
 })
 
 module.exports = mongoose.model('Person', personSchema)

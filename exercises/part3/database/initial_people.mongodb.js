@@ -1,4 +1,4 @@
-/* global use, db */
+/* global use, db, ObjectId */
 
 /////////////////////////////////
 // IMPORTANT                   //
@@ -7,10 +7,10 @@
 // USE WITH CAUTION            //
 /////////////////////////////////
 
-use('phonebookApp');
-const people = db.getCollection('people');
+use('phonebookApp')
+const people = db.getCollection('people')
 
-people.deleteMany({});
+people.deleteMany({})
 
 people.insertMany([
   {
