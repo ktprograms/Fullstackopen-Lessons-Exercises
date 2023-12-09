@@ -1,0 +1,4 @@
+DELETE {{host}}/api/notes/656afa95bb54ae7144f5ff97
+
+### Malformmated id
+DELETE {{host}}/api/notes/0

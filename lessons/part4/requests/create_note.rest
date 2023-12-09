@@ -1,0 +1,19 @@
+POST {{host}}/api/notes
+Content-Type: application/json
+
+{
+  "content": "VS Code REST Client is a pretty handy tool",
+  "important": true
+}
+
+### Invalid content
+POST {{host}}/api/notes
+Content-Type: application/json
+
+{
+  "content": "lol",
+  "important": true
+}
+
+### Check all notes
+GET {{host}}/api/notes
