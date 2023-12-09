@@ -7,9 +7,15 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     proxy: {
+      // '/absproxy/5173/api': {
+      //   target: 'https://vscode.home.test:8080/proxy/3000/api',
+      //   secure: false,
+      //   rewrite: (path) => path.replace(/^\/absproxy\/5173\/api/, '')
+      // },
       '/api': {
-        target: 'http://192.168.1.104:3000',
+        target: 'https://3000.vscode.home.test:8080/',
         changeOrigin: true,
+        secure: false,
       },
     },
   },

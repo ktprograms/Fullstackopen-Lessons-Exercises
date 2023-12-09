@@ -65,7 +65,7 @@ const App = () => {
     : notes.filter((note) => note.important === true)
 
   if (!notes) {
-    return null
+    return <h1>Loading...</h1>
   }
 
   return (
