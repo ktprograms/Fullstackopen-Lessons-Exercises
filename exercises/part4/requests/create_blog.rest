@@ -1,0 +1,12 @@
+POST {{host}}/api/blogs
+Content-Type: application/json
+
+{
+  "title": "example blog",
+  "author": "writer McWriteface",
+  "url": "https://exampleblog.example.com",
+  "likes": 5
+}
+
+### Check all blogs
+GET {{host}}/api/blogs
