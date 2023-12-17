@@ -7,7 +7,7 @@ if (process.argv.length < 3) {
 
 const password = process.argv[2]
 
-const url = `mongodb://root:${password}@192.168.1.103:50000/noteApp?directConnection=true&authSource=admin`
+const url = `mongodb+srv://root:${password}@yosoko8.coolify.home.test/testNoteApp?tls=false&authSource=admin`
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
@@ -19,19 +19,19 @@ const noteSchema = new mongoose.Schema({
 
 const Note = mongoose.model('Note', noteSchema)
 
-// const note = new Note({
-//   content: 'Mongoose makes things easy',
-//   important: true,
-// })
+const note = new Note({
+  content: 'Browser can execute only JavaScript',
+  important: true,
+})
 
-// note.save().then((result) => {
-//   console.log('note saved!')
-//   mongoose.connection.close()
-// })
-
-Note.find({ important: true }).then((result) => {
-  result.forEach((note) => {
-    console.log(note)
-  })
+note.save().then((result) => {
+  console.log('note saved!')
   mongoose.connection.close()
 })
+
+// Note.find({ important: true }).then((result) => {
+//   result.forEach((note) => {
+//     console.log(note)
+//   })
+//   mongoose.connection.close()
+// })
