@@ -1,0 +1,11 @@
+POST {{host}}/api/users
+Content-Type: application/json
+
+{
+  "username": "ktprograms",
+  "name": "kt",
+  "password": "secret"
+}
+
+### Check all users
+GET {{host}}/api/users
