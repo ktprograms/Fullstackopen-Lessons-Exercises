@@ -68,5 +68,6 @@ module.exports = {
       'error',
       'never',
     ],
+    'space-infix-ops': 'error',
   },
 }

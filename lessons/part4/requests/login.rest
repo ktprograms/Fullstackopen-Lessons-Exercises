@@ -1,0 +1,16 @@
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "password": "salainen"
+}
+
+### Invalid username and password
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+  "username": "m",
+  "password": "s"
+}
