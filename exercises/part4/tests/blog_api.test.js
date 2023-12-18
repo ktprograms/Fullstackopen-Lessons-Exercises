@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const helper = require('./test_helper')
 const supertest = require('supertest')
@@ -5,6 +6,7 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -208,6 +210,157 @@ describe('updating blogs', () => {
       .put(`/api/blogs/${invalidId}`)
       .send(dataToUpdate)
       .expect(400)
+  })
+})
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test('correct number of users returned as json', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const response = await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveLength(usersAtStart.length)
+  })
+
+  test('creation succeeds with a unique username', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'ktprograms',
+      name: 'kt',
+      password: 'secret',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map((u) => u.username)
+    expect(usernames).toContain(newUser.username)
+  })
+
+  describe('invalid username', () => {
+    test('nonexistent', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        name: 'kt',
+        password: 'secret',
+      }
+
+      const response = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.error).toContain('validation failed: username: Path `username` is required')
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd).toEqual(usersAtStart)
+    })
+
+    test('too short', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'kt',
+        name: 'kt',
+        password: 'secret',
+      }
+
+      const response = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.error).toContain('validation failed: username: Path `username` (')
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd).toEqual(usersAtStart)
+    })
+
+    test('not unique', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'root',
+        name: 'rootyMcRootface',
+        password: 'secret',
+      }
+
+      const response = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.error).toContain('expected `username` to be unique')
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd).toEqual(usersAtStart)
+    })
+  })
+
+  describe('invalid password', () => {
+    test('nonexistent', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'ktprograms',
+        name: 'kt',
+      }
+
+      const response = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.error).toContain('password missing')
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd).toEqual(usersAtStart)
+    })
+
+    test('too short', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'ktprograms',
+        name: 'kt',
+        password: 'pw',
+      }
+
+      const response = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.error).toContain('password too short')
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd).toEqual(usersAtStart)
+    })
   })
 })
 
