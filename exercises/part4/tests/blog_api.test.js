@@ -37,34 +37,6 @@ test('unique identifier property is named id', async () => {
   expect(response.body[0].id).toBeDefined()
 })
 
-describe('deleting blogs', () => {
-  test('succeeds with status code 204 if id is valid', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
-
-    await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
-      .expect(204)
-
-    const blogsAtEnd = await helper.blogsInDb()
-
-    expect(blogsAtEnd).toHaveLength(
-      helper.initialBlogs.length - 1
-    )
-
-    const titles = blogsAtEnd.map((b) => b.title)
-    expect(titles).not.toContain(blogToDelete.title)
-  })
-
-  test('fails with status code 400 if id is invalid', async () => {
-    const invalidId = '0'
-
-    await api
-      .delete(`/api/blogs/${invalidId}`)
-      .expect(400)
-  })
-})
-
 describe('updating blogs', () => {
   const dataToUpdate = {
     likes: 21,
@@ -611,6 +583,103 @@ describe('when there is initially one user in db', () => {
 
           expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
         })
+      })
+    })
+  })
+
+  describe('deleting blogs', () => {
+    let blogToDelete
+    beforeEach(async () => {
+      await Blog.deleteMany({})
+
+      const response = await authenticatedApi
+        .post('/api/blogs')
+        .send(helper.initialBlogs[0])
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+      blogToDelete = response.body
+    })
+
+    describe('fails with status code 401 with invalid token', () => {
+      test('missing token', async () => {
+        const response = await api
+          .delete(`/api/blogs/${blogToDelete.id}`)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.body.error).toBe('jwt must be provided')
+      })
+
+      test('invalid token signature', async () => {
+        // Token source: jwt.io default example
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+
+        const response = await api
+          .delete(`/api/blogs/${blogToDelete.id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.body.error).toBe('invalid signature')
+      })
+
+      test('invalid token data', async () => {
+        // Token source: jwt.io default example with correct signature
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.c_6N8yj2g08aZQ5gJgXczbs5MK-vgWrVGcYi3kAZKek'
+
+        const response = await api
+          .delete(`/api/blogs/${blogToDelete.id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.body.error).toBe('token invalid')
+      })
+    })
+
+    describe('fails with status code 401 with expired token', () => {
+      let clock
+      beforeEach(() => {
+        clock = FakeTimers.install({
+          now: Date.now(),
+        })
+      })
+      afterAll(() => {
+        clock.uninstall()
+      })
+
+      test('tick 1h + 100ms', async () => {
+        clock.tick((60 * 60 * 1000) + 100)
+
+        const response = await authenticatedApi
+          .delete(`/api/blogs/${blogToDelete.id}`)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.body.error).toBe('jwt expired')
+      })
+    })
+
+    describe('passes authorization checks with valid token', () => {
+      test('succeeds with status code 204 if id is valid', async () => {
+        await authenticatedApi
+          .delete(`/api/blogs/${blogToDelete.id}`)
+          .expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd).toHaveLength(0)
+
+        const titles = blogsAtEnd.map((b) => b.title)
+        expect(titles).not.toContain(blogToDelete.title)
+      })
+
+      test('fails with status code 400 if id is invalid', async () => {
+        const invalidId = '0'
+
+        await authenticatedApi
+          .delete(`/api/blogs/${invalidId}`)
+          .expect(400)
       })
     })
   })
