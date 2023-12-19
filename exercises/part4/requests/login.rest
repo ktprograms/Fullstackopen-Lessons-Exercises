@@ -1,0 +1,42 @@
+### Valid credentials
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+  "username": "ktprograms",
+  "password": "secret"
+}
+
+### Invalid password (missing)
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+  "username": "ktprograms"
+}
+
+### Invalid password (wrong)
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+  "username": "ktprograms",
+  "password": "pw"
+}
+
+### Invalid username (missing)
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+  "password": "secret"
+}
+
+### Invalid username (nonexistent)
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "secret"
+}

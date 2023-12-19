@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const helper = require('./test_helper')
 const supertest = require('supertest')
@@ -407,6 +408,98 @@ describe('when there is initially one user in db', () => {
     expect(blogsResponse.body).toContainEqual({ ...blogsAtEnd[1], user: expectedUser })
 
     expect(usersResponse.body).toContainEqual({ ...expectedUser, blogs: blogsAtEnd })
+  })
+
+  describe('login', () => {
+    let userToLogin
+    beforeEach(async () => {
+      const usersAtStart = await helper.usersInDb()
+      userToLogin = usersAtStart[0]
+    })
+
+    test('succeeds with valid credentials', async () => {
+      const loginDetails = {
+        username: userToLogin.username,
+        password: 'sekret',
+      }
+
+      const response = await api
+        .post('/api/login')
+        .send(loginDetails)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.username).toBe(userToLogin.username)
+      expect(response.body.token).toBeDefined()
+
+      const decodedToken = jwt.verify(response.body.token, process.env.JWT_SECRET)
+
+      expect(decodedToken.username).toBe(userToLogin.username)
+      expect(decodedToken.id).toBe(userToLogin.id)
+    })
+
+    describe('fails with invalid username', () => {
+      test('missing username parameter', async () => {
+        const loginDetails = {
+          password: 'sekret',
+        }
+
+        const response = await api
+          .post('/api/login')
+          .send(loginDetails)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.body.error).toBe('invalid username or password')
+      })
+
+      test('wrong username', async () => {
+        const loginDetails = {
+          username: 'r',
+          password: 'sekret',
+        }
+
+        const response = await api
+          .post('/api/login')
+          .send(loginDetails)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.body.error).toBe('invalid username or password')
+      })
+    })
+
+
+    describe('fails with invalid password', () => {
+      test('missing password parameter', async () => {
+        const loginDetails = {
+          username: userToLogin.username,
+        }
+
+        const response = await api
+          .post('/api/login')
+          .send(loginDetails)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.body.error).toBe('invalid username or password')
+      })
+
+      test('wrong password', async () => {
+        const loginDetails = {
+          username: userToLogin.username,
+          password: 'pw',
+        }
+
+        const response = await api
+          .post('/api/login')
+          .send(loginDetails)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.body.error).toBe('invalid username or password')
+      })
+    })
   })
 })
 
