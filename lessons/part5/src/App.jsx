@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Footer from './components/Footer'
 import Note from './components/Note'
 import Notification from './components/Notification'
 import noteService from './services/notes'
+import loginService from './services/login'
 
 const App = () => {
   const [notes, setNotes] = useState(null)
   const [newNote, setNewNote] = useState('a new note...')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
     noteService
@@ -18,10 +21,10 @@ const App = () => {
         setNotes(initialNotes)
       })
   }, [])
-  
+
   const addNote = (event) => {
     event.preventDefault()
-    
+
     const noteObject = {
       content: newNote,
       important: Math.random() < 0.5,
@@ -41,13 +44,13 @@ const App = () => {
   }
 
   const toggleImportanceOf = (id) => {
-    const note = notes.find(n => n.id === id)
+    const note = notes.find((n) => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
     noteService
       .update(id, changedNote)
       .then((returnedNote) => {
-        setNotes(notes.map(n => n.id !== id ? n : returnedNote))
+        setNotes(notes.map((n) => n.id !== id ? n : returnedNote))
       })
       .catch((error) => {
         setErrorMessage(
@@ -56,8 +59,27 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setNotes(notes.filter(n => n.id !== id))
+        setNotes(notes.filter((n) => n.id !== id))
       })
+  }
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+      noteService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const notesToShow = showAll
@@ -68,10 +90,54 @@ const App = () => {
     return <h1>Loading...</h1>
   }
 
+  const loginForm = () => (
+    <form onSubmit={handleLogin}>
+      <div>
+        username
+        <input
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
+        />
+      </div>
+      <div>
+        password
+        <input
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
+        />
+      </div>
+      <button type="submit">login</button>
+    </form>
+  )
+
+  const noteForm = () => (
+    <form onSubmit={addNote}>
+      <input
+        value={newNote}
+        onChange={handleNoteChange}
+      />
+      <button type="submit">save</button>
+    </form>
+  )
+
   return (
     <div>
       <h1>Notes</h1>
+
       <Notification message={errorMessage} />
+
+      {user
+        ? <div>
+          <p>{user.name} logged in</p>
+          {noteForm()}
+        </div>
+        : loginForm()
+      }
+
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}
@@ -85,13 +151,7 @@ const App = () => {
             toggleImportance={() => toggleImportanceOf(note.id)} />
         )}
       </ul>
-      <form onSubmit={addNote}>
-        <input
-          value={newNote}
-          onChange={handleNoteChange}
-        />
-        <button type="submit">save</button>
-      </form>
+
       <Footer />
     </div>
   )
