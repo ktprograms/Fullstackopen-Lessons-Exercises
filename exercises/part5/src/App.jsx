@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
+  const [message, setMessage] = useState(null)
+  const [isSuccessMessage, setIsSuccessMessage] = useState(false)
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -35,19 +38,35 @@ const App = () => {
         username, password,
       })
 
+      setMessage(`Successfuly logged in as ${user.name}`)
+      setIsSuccessMessage(true)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+
       window.localStorage.setItem('loggedInBloglistUser', JSON.stringify(user))
       blogService.setAuthorization(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.error('Wrong credentials')
+      setMessage('Wrong credentials')
+      setIsSuccessMessage(false)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedInBloglistUser')
     setUser(null)
+
+    setMessage('Successfuly logged out')
+    setIsSuccessMessage(true)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
   }
 
   const handleAddBlog = async (event) => {
@@ -60,11 +79,22 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
+
+      setMessage(`A new blog ${title} by ${author} added`)
+      setIsSuccessMessage(true)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+
       setTitle('')
       setAuthor('')
       setUrl('')
     } catch (exception) {
-      console.error('Wrong credentials')
+      setMessage(`Error adding blog: ${exception.response.data.error}`)
+      setIsSuccessMessage(false)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
   }
 
@@ -135,6 +165,8 @@ const App = () => {
 
   return (
     <>
+      <Notification message={message} isSuccess={isSuccessMessage} />
+
       {user
         ? blogsList()
         : loginForm()
