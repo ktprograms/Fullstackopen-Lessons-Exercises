@@ -165,7 +165,7 @@ const App = () => {
 
   return (
     <>
-      <Notification message={message} isSuccess={isSuccessMessage} />
+      <Notification message={message} setMessage={setMessage} isSuccess={isSuccessMessage} />
 
       {user
         ? blogsList()

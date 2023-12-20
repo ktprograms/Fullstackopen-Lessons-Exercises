@@ -1,4 +1,14 @@
-const Notification = ({ message, isSuccess }) => {
+import { useEffect } from 'react'
+
+const Notification = ({ message, setMessage, isSuccess }) => {
+  useEffect(() => {
+    if (message) {
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  }, [message, setMessage])
+
   if (message === null) {
     return null
   }
