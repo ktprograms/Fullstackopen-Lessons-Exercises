@@ -52,15 +52,27 @@ module.exports = {
       'error',
       'single',
     ],
-    'react/prop-types': 'off',
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
+    'react/display-name': 'off',
+    'react/jsx-closing-bracket-location': 'error',
+    'react/jsx-tag-spacing': [
+      'error',
+      {
+        'closingSlash': 'never',
+        'beforeSelfClosing': 'always',
+        'afterOpening': 'never',
+        'beforeClosing': 'never',
+      },
+    ],
+    'react/prop-types': 'off',
     'semi': [
       'error',
       'never',
     ],
+    'sort-imports': 'error',
     'space-infix-ops': 'error',
   },
 }
