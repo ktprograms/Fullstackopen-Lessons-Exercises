@@ -108,7 +108,8 @@ const App = () => {
             type="text"
             value={username}
             name="Username"
-            onChange={({ target }) => setUsername(target.value)} />
+            onChange={({ target }) => setUsername(target.value)}
+          />
         </div>
         <div>
           password
@@ -116,7 +117,8 @@ const App = () => {
             type="password"
             value={password}
             name="Password"
-            onChange={({ target }) => setPassword(target.value)} />
+            onChange={({ target }) => setPassword(target.value)}
+          />
         </div>
         <button type="submit">login</button>
       </form>
@@ -136,7 +138,8 @@ const App = () => {
             type="text"
             value={title}
             name="Title"
-            onChange={({ target }) => setTitle(target.value)} />
+            onChange={({ target }) => setTitle(target.value)}
+          />
         </div>
         <div>
           author
@@ -144,7 +147,8 @@ const App = () => {
             type="text"
             value={author}
             name="Author"
-            onChange={({ target }) => setAuthor(target.value)} />
+            onChange={({ target }) => setAuthor(target.value)}
+          />
         </div>
         <div>
           url
@@ -152,7 +156,8 @@ const App = () => {
             type="text"
             value={url}
             name="URL"
-            onChange={({ target }) => setUrl(target.value)} />
+            onChange={({ target }) => setUrl(target.value)}
+          />
         </div>
         <button type="submit">create</button>
       </form>

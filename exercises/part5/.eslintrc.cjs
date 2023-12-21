@@ -1,5 +1,5 @@
 // enable this to sort module.exports.overrides
-/* eslint sort-keys: 2 */
+// /* eslint sort-keys: 2 */
 
 module.exports = {
   root: true,
@@ -56,6 +56,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'react/jsx-closing-bracket-location': 'error',
     'react/prop-types': 'off',
     'semi': [
       'error',
