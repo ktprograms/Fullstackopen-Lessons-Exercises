@@ -1,3 +1,4 @@
+/* eslint sort-imports: 'off' */
 import ReactDOM from 'react-dom/client'
 import App from './App'
 
