@@ -149,9 +149,12 @@ const App = () => {
           <button onClick={() => setNewBlogVisible(false)}>cancel</button>
         </div>
 
-        {blogs.map((blog) =>
-          <Blog key={blog.id} blog={blog} onLikeBlog={handleLikeBlog} />
-        )}
+        {blogs
+          .toSorted((a, b) => b.likes - a.likes) // sort from highest to lowest (reverse order)
+          .map((blog) =>
+            <Blog key={blog.id} blog={blog} onLikeBlog={handleLikeBlog} />
+          )
+        }
       </div>
     )
   }
