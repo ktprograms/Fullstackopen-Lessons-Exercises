@@ -104,6 +104,19 @@ const App = () => {
     }
   }
 
+  const handleRemoveBlog = async (id) => {
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter((b) => b.id !== id))
+    } catch (exception) {
+      setMessage(`Error removing blog: ${exception.response.data.error}`)
+      setIsSuccessMessage(false)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  }
+
   const loginForm = () => (
     <div>
       <h2>login to application</h2>
@@ -152,7 +165,13 @@ const App = () => {
         {blogs
           .toSorted((a, b) => b.likes - a.likes) // sort from highest to lowest (reverse order)
           .map((blog) =>
-            <Blog key={blog.id} blog={blog} onLikeBlog={handleLikeBlog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              onLikeBlog={handleLikeBlog}
+              showRemove={blog.user.id === user.id}
+              onRemoveBlog={handleRemoveBlog}
+            />
           )
         }
       </div>

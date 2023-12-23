@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 
-const Blog = ({ blog, onLikeBlog }) => {
+const Blog = ({ blog, onLikeBlog, showRemove, onRemoveBlog }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
 
   const showWhenVisible = { display: detailsVisible ? '' : 'none' }
@@ -11,6 +11,12 @@ const Blog = ({ blog, onLikeBlog }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
+  }
+
+  const handleRemoveClick = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      onRemoveBlog(blog.id)
+    }
   }
 
   return (
@@ -23,6 +29,9 @@ const Blog = ({ blog, onLikeBlog }) => {
         {blog.url}<br />
         likes {blog.likes} <button onClick={() => onLikeBlog(blog.id)}>like</button><br />
         {blog.user.name}<br />
+        {showRemove && <>
+          <button onClick={handleRemoveClick}>delete</button><br />
+        </>}
       </div>
     </div>
   )
@@ -31,6 +40,8 @@ const Blog = ({ blog, onLikeBlog }) => {
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   onLikeBlog: PropTypes.func.isRequired,
+  showRemove: PropTypes.bool.isRequired,
+  onRemoveBlog: PropTypes.func.isRequired,
 }
 
 export default Blog
