@@ -88,6 +88,22 @@ const App = () => {
     }
   }
 
+  const handleLikeBlog = async (id) => {
+    try {
+      const blog = blogs.find((b) => b.id === id)
+      const update = { likes: blog.likes + 1 } // TODO: Not TOCTTOU/Multiple users safe
+
+      const returnedBlog = await blogService.update(id, update)
+      setBlogs(blogs.map((b) => b.id === id ? returnedBlog : b))
+    } catch (exception) {
+      setMessage(`Error liking blog: ${exception.response.data.error}`)
+      setIsSuccessMessage(false)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  }
+
   const loginForm = () => (
     <div>
       <h2>login to application</h2>
@@ -134,7 +150,7 @@ const App = () => {
         </div>
 
         {blogs.map((blog) =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} onLikeBlog={handleLikeBlog} />
         )}
       </div>
     )

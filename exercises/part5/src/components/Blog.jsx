@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types'
 import { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, onLikeBlog }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
 
   const showWhenVisible = { display: detailsVisible ? '' : 'none' }
@@ -20,11 +21,16 @@ const Blog = ({ blog }) => {
 
       <div style={showWhenVisible}>
         {blog.url}<br />
-        likes {blog.likes} <button>like</button><br />
+        likes {blog.likes} <button onClick={() => onLikeBlog(blog.id)}>like</button><br />
         {blog.user.name}<br />
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  onLikeBlog: PropTypes.func.isRequired,
 }
 
 export default Blog
