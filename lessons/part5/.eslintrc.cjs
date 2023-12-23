@@ -1,9 +1,15 @@
 // enable this to sort module.exports.overrides
 // /* eslint sort-keys: 2 */
 
+/* eslint-env node */
+
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: {
+    browser: true,
+    es2020: true,
+    'jest/globals': true,
+  },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
@@ -13,7 +19,7 @@ module.exports = {
   ignorePatterns: ['dist'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   settings: { react: { version: '18.2' } },
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'jest'],
   rules: {
     'arrow-parens': 'error',
     'arrow-spacing': [
@@ -42,7 +48,7 @@ module.exports = {
       'error',
       'unix',
     ],
-    'no-console': 0,
+    'no-console': 'off',
     'no-trailing-spaces': 'error',
     'object-curly-spacing': [
       'error',
@@ -56,7 +62,6 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'react/display-name': 'off',
     'react/jsx-closing-bracket-location': 'error',
     'react/jsx-tag-spacing': [
       'error',
@@ -73,6 +78,10 @@ module.exports = {
       'never',
     ],
     'sort-imports': 'error',
+    'space-in-parens': [
+      'error',
+      'never',
+    ],
     'space-infix-ops': 'error',
   },
 }
