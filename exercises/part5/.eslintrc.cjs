@@ -44,6 +44,10 @@ module.exports = {
       'error',
       2,
     ],
+    'jsx-quotes': [
+      'error',
+      'prefer-double',
+    ],
     'linebreak-style': [
       'error',
       'unix',
