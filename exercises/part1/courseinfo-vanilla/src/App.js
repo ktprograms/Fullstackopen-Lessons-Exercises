@@ -4,18 +4,17 @@ const Header = (course) => {
     return root;
 };
 
-const Content = (part1, exercises1, part2, exercises2, part3, exercises3) => {
-    const p_part1 = document.createElement('p');
-    p_part1.textContent = `${part1} ${exercises1}`;
-    const p_part2 = document.createElement('p');
-    p_part2.textContent = `${part2} ${exercises2}`;
-    const p_part3 = document.createElement('p');
-    p_part3.textContent = `${part3} ${exercises3}`;
+const Part = (part, exercises) => {
+    const root = document.createElement('p');
+    root.textContent = `${part} ${exercises}`;
+    return root;
+};
 
+const Content = (part1, exercises1, part2, exercises2, part3, exercises3) => {
     const root = document.createElement('div');
-    root.appendChild(p_part1);
-    root.appendChild(p_part2);
-    root.appendChild(p_part3);
+    root.appendChild(Part(part1, exercises1));
+    root.appendChild(Part(part2, exercises2));
+    root.appendChild(Part(part3, exercises3));
     return root;
 };
 
