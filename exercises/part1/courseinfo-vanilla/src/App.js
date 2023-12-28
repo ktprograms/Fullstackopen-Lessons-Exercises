@@ -10,39 +10,41 @@ const Part = (part, exercises) => {
     return root;
 };
 
-const Content = (part1, part2, part3) => {
+const Content = (parts) => {
     const root = document.createElement('div');
-    root.appendChild(Part(part1.name, part1.exercises));
-    root.appendChild(Part(part2.name, part2.exercises));
-    root.appendChild(Part(part3.name, part3.exercises));
+    root.appendChild(Part(parts[0].name, parts[0].exercises));
+    root.appendChild(Part(parts[1].name, parts[1].exercises));
+    root.appendChild(Part(parts[2].name, parts[2].exercises));
     return root;
 };
 
-const Total = (part1, part2, part3) => {
+const Total = (parts) => {
     const root = document.createElement('p');
-    root.textContent = `Number of exercises: ${part1.exercises + part2.exercises + part3.exercises}`;
+    root.textContent = `Number of exercises: ${parts[0].exercises + parts[1].exercises + parts[2].exercises}`;
     return root;
 };
 
 const App = () => {
     const course = 'Half Stack application development';
-    const part1 = {
-        name: 'Fundamentals of React',
-        exercises: 10,
-    };
-    const part2 = {
-        name: 'Using props to pass data',
-        exercises: 7,
-    };
-    const part3 = {
-        name: 'State of a component',
-        exercises: 14,
-    };
+    const parts = [
+        {
+            name: 'Fundamentals of React',
+            exercises: 10,
+        },
+        {
+            name: 'Using props to pass data',
+            exercises: 7,
+        },
+        {
+            name: 'State of a component',
+            exercises: 14,
+        },
+    ];
 
     const root = document.createElement('div');
     root.appendChild(Header(course));
-    root.appendChild(Content(part1, part2, part3));
-    root.appendChild(Total(part1, part2, part3));
+    root.appendChild(Content(parts));
+    root.appendChild(Total(parts));
     return root;
 };
 
