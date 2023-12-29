@@ -13,8 +13,13 @@ const App = () => {
     let selected = 0;
     let votes = anecdotes.map(() => 0);
 
+    const getIndexOfMax = () => votes.indexOf(Math.max(...votes));
+
     const root = document.createElement('div');
     const render = () => {
+        const h1_anecdoteOfTheDay = document.createElement('h1');
+        h1_anecdoteOfTheDay.textContent = 'Anecdote of the day';
+
         const t_anecdote = document.createTextNode(anecdotes[selected]);
         const t_votes = document.createTextNode(`has ${votes[selected]} votes`);
 
@@ -31,13 +36,24 @@ const App = () => {
             render();
         });
 
+        const h1_anecdoteWithMostVotes = document.createElement('h1');
+        h1_anecdoteWithMostVotes.textContent = 'Anecdote with most votes';
+        const t_anecdoteWithMostVotes = document.createTextNode(anecdotes[getIndexOfMax()]);
+        const t_mostVotes = document.createTextNode(`has ${Math.max(...votes)} votes`);
+
         root.replaceChildren(
+            h1_anecdoteOfTheDay,
             t_anecdote,
             document.createElement('br'),
             t_votes,
             document.createElement('br'),
             button_vote,
-            button_nextAnecdote
+            button_nextAnecdote,
+
+            h1_anecdoteWithMostVotes,
+            t_anecdoteWithMostVotes,
+            document.createElement('br'),
+            t_mostVotes
         );
     };
     render();
