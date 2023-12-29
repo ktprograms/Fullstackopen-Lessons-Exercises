@@ -11,9 +11,18 @@ const Button = (text, onClick) => {
 };
 
 const StatisticsLine = (text, value) => {
-    const root = document.createTextNode(`${text} ${value}`);
+    const root = document.createElement('tr');
     const render = () => {
-        root.textContent = `${text} ${value}`;
+        const td_text = document.createElement('td');
+        td_text.textContent = text;
+
+        const td_value = document.createElement('td');
+        td_value.textContent = value;
+
+        root.replaceChildren(
+            td_text,
+            td_value
+        );
     };
     render();
     return root;
@@ -31,17 +40,19 @@ const Statistics = (good, neutral, bad) => {
     const root = document.createElement('div');
     const render = () => {
         if (good + neutral + bad > 0) {
-            root.replaceChildren(
+            const tbody = document.createElement('tbody');
+            tbody.append(
                 StatisticsLine('good', good),
-                document.createElement('br'),
                 StatisticsLine('neutral', neutral),
-                document.createElement('br'),
                 StatisticsLine('bad', bad),
-                document.createElement('br'),
                 StatisticsLine('average', calculateAverage(good, neutral, bad)),
-                document.createElement('br'),
                 StatisticsLine('positive', calculatePositive(good, neutral, bad))
             );
+
+            const table = document.createElement('table');
+            table.append(tbody);
+
+            root.replaceChildren(table);
         } else {
             root.replaceChildren('No feedback given');
         }
