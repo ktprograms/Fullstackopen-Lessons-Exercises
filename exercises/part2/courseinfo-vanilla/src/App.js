@@ -1,69 +1,31 @@
-const Header = (course) => {
-    const root = document.createElement('h1');
-    const render = () => {
-        root.textContent = course.name;
-    };
-    render();
-    return root;
-};
-
-const Part = (name, exercises) => {
-    const root = document.createElement('p');
-    const render = () => {
-        root.textContent = `${name} ${exercises}`;
-    };
-    render();
-    return root;
-};
-
-const Content = (course) => {
-    const root = document.createElement('div');
-    const render = () => {
-        root.appendChild(Part(course.parts[0].name, course.parts[0].exercises));
-        root.appendChild(Part(course.parts[1].name, course.parts[1].exercises));
-        root.appendChild(Part(course.parts[2].name, course.parts[2].exercises));
-    };
-    render();
-    return root;
-};
-
-const Total = (course) => {
-    const root = document.createElement('p');
-    const render = () => {
-        root.textContent = `Number of exercises: ${
-            course.parts[0].exercises
-            + course.parts[1].exercises
-            + course.parts[2].exercises
-        }`;
-    };
-    render();
-    return root;
-};
+import Course from './components/Course';
 
 const App = () => {
     const course = {
+        id: 1,
         name: 'Half Stack application development',
         parts: [
             {
                 name: 'Fundamentals of React',
                 exercises: 10,
+                id: 1,
             },
             {
                 name: 'Using props to pass data',
                 exercises: 7,
+                id: 2,
             },
             {
                 name: 'State of a component',
                 exercises: 14,
+                id: 3,
             },
         ],
     };
 
     const root = document.createElement('div');
     const render = () => {
-        root.appendChild(Header(course));
-        root.appendChild(Content(course));
-        root.appendChild(Total(course));
+        root.replaceChildren(Course(course));
     };
     render();
     return root;
