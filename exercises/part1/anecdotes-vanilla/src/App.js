@@ -11,11 +11,19 @@ const App = () => {
     ];
 
     let selected = 0;
+    let votes = anecdotes.map(() => 0);
 
     const root = document.createElement('div');
     const render = () => {
         const t_anecdote = document.createTextNode(anecdotes[selected]);
+        const t_votes = document.createTextNode(`has ${votes[selected]} votes`);
 
+        const button_vote = document.createElement('button');
+        button_vote.textContent = 'vote';
+        button_vote.addEventListener('click', () => {
+            votes[selected]++;
+            render();
+        });
         const button_nextAnecdote = document.createElement('button');
         button_nextAnecdote.textContent = 'next anecdote';
         button_nextAnecdote.addEventListener('click', () => {
@@ -26,6 +34,9 @@ const App = () => {
         root.replaceChildren(
             t_anecdote,
             document.createElement('br'),
+            t_votes,
+            document.createElement('br'),
+            button_vote,
             button_nextAnecdote
         );
     };
