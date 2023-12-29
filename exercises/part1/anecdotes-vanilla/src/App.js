@@ -14,7 +14,20 @@ const App = () => {
 
     const root = document.createElement('div');
     const render = () => {
-        root.textContent = anecdotes[selected];
+        const t_anecdote = document.createTextNode(anecdotes[selected]);
+
+        const button_nextAnecdote = document.createElement('button');
+        button_nextAnecdote.textContent = 'next anecdote';
+        button_nextAnecdote.addEventListener('click', () => {
+            selected = Math.floor(Math.random() * anecdotes.length);
+            render();
+        });
+
+        root.replaceChildren(
+            t_anecdote,
+            document.createElement('br'),
+            button_nextAnecdote
+        );
     };
     render();
     return root;
