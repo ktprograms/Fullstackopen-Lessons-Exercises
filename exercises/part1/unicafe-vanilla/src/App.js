@@ -1,3 +1,24 @@
+const Button = (text, onClick) => {
+    const root = document.createElement('button');
+    const render = () => {
+        root.textContent = text;
+        // Only happens and needed on self render call
+        root.removeEventListener('click', onClick);
+        root.addEventListener('click', onClick);
+    };
+    render();
+    return root;
+};
+
+const StatisticsLine = (text, value) => {
+    const root = document.createTextNode(`${text} ${value}`);
+    const render = () => {
+        root.textContent = `${text} ${value}`;
+    };
+    render();
+    return root;
+};
+
 const Statistics = (good, neutral, bad) => {
     const calculateAverage = (good, neutral, bad) => (
         (good + (bad * -1)) / (good + neutral + bad)
@@ -10,22 +31,16 @@ const Statistics = (good, neutral, bad) => {
     const root = document.createElement('div');
     const render = () => {
         if (good + neutral + bad > 0) {
-            const t_good = document.createTextNode(`good ${good}`);
-            const t_neutral = document.createTextNode(`neutral ${neutral}`);
-            const t_bad = document.createTextNode(`bad ${bad}`);
-            const t_average = document.createTextNode(`average ${calculateAverage(good, neutral, bad)}`);
-            const t_positive = document.createTextNode(`positive ${calculatePositive(good, neutral, bad)}`);
-
             root.replaceChildren(
-                t_good,
+                StatisticsLine('good', good),
                 document.createElement('br'),
-                t_neutral,
+                StatisticsLine('neutral', neutral),
                 document.createElement('br'),
-                t_bad,
+                StatisticsLine('bad', bad),
                 document.createElement('br'),
-                t_average,
+                StatisticsLine('average', calculateAverage(good, neutral, bad)),
                 document.createElement('br'),
-                t_positive
+                StatisticsLine('positive', calculatePositive(good, neutral, bad))
             );
         } else {
             root.replaceChildren('No feedback given');
@@ -42,32 +57,24 @@ const App = () => {
 
     const root = document.createElement('div');
     const render = () => {
-        const button_good = document.createElement('button');
-        button_good.textContent = 'good';
-        button_good.addEventListener('click', () => {
-            good++;
-            render();
-        });
-        const button_neutral = document.createElement('button');
-        button_neutral.textContent = 'neutral';
-        button_neutral.addEventListener('click', () => {
-            neutral++;
-            render();
-        });
-        const button_bad = document.createElement('button');
-        button_bad.textContent = 'bad';
-        button_bad.addEventListener('click', () => {
-            bad++;
-            render();
-        });
-
         const h1_giveFeedback = document.createElement('h1');
         h1_giveFeedback.textContent = 'Give Feedback';
 
         const div_buttons = document.createElement('div');
-        div_buttons.appendChild(button_good);
-        div_buttons.appendChild(button_neutral);
-        div_buttons.appendChild(button_bad);
+        div_buttons.replaceChildren(
+            Button('good', () => {
+                good++;
+                render();
+            }),
+            Button('neutral', () => {
+                neutral++;
+                render();
+            }),
+            Button('bad', () => {
+                bad++;
+                render();
+            })
+        );
 
         const h1_statistics = document.createElement('h1');
         h1_statistics.textContent = 'Statistics';
