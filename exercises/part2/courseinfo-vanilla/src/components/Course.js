@@ -25,12 +25,27 @@ const Content = (course) => {
     return root;
 };
 
+const Total = (course) => {
+    const root = document.createElement('b');
+    const render = () => {
+        root.textContent = `total of ${
+            course
+                .parts
+                .map((part) => part.exercises)
+                .reduce((acc, n) => acc + n, 0)
+        } exercises`;
+    };
+    render();
+    return root;
+};
+
 const Course = (course) => {
     const root = document.createElement('div');
     const render = () => {
         root.replaceChildren(
             Header(course),
-            Content(course)
+            Content(course),
+            Total(course)
         );
     };
     render();
