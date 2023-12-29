@@ -9,23 +9,27 @@ const Statistics = (good, neutral, bad) => {
 
     const root = document.createElement('div');
     const render = () => {
-        const t_good = document.createTextNode(`good ${good}`);
-        const t_neutral = document.createTextNode(`neutral ${neutral}`);
-        const t_bad = document.createTextNode(`bad ${bad}`);
-        const t_average = document.createTextNode(`average ${calculateAverage(good, neutral, bad)}`);
-        const t_positive = document.createTextNode(`positive ${calculatePositive(good, neutral, bad)}`);
+        if (good + neutral + bad > 0) {
+            const t_good = document.createTextNode(`good ${good}`);
+            const t_neutral = document.createTextNode(`neutral ${neutral}`);
+            const t_bad = document.createTextNode(`bad ${bad}`);
+            const t_average = document.createTextNode(`average ${calculateAverage(good, neutral, bad)}`);
+            const t_positive = document.createTextNode(`positive ${calculatePositive(good, neutral, bad)}`);
 
-        root.replaceChildren(
-            t_good,
-            document.createElement('br'),
-            t_neutral,
-            document.createElement('br'),
-            t_bad,
-            document.createElement('br'),
-            t_average,
-            document.createElement('br'),
-            t_positive
-        );
+            root.replaceChildren(
+                t_good,
+                document.createElement('br'),
+                t_neutral,
+                document.createElement('br'),
+                t_bad,
+                document.createElement('br'),
+                t_average,
+                document.createElement('br'),
+                t_positive
+            );
+        } else {
+            root.replaceChildren('No feedback given');
+        }
     };
     render();
     return root;
