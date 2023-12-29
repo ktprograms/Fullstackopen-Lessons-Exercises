@@ -13,7 +13,9 @@ const App = () => {
     let selected = 0;
     let votes = anecdotes.map(() => 0);
 
-    const getIndexOfMax = () => votes.indexOf(Math.max(...votes));
+    const getRandomInt = (max) => Math.floor(Math.random() * max);
+    const getMaxVote = () => Math.max(...votes);
+    const getIndexOfMax = () => votes.indexOf(getMaxVote());
 
     const root = document.createElement('div');
     const render = () => {
@@ -32,14 +34,14 @@ const App = () => {
         const button_nextAnecdote = document.createElement('button');
         button_nextAnecdote.textContent = 'next anecdote';
         button_nextAnecdote.addEventListener('click', () => {
-            selected = Math.floor(Math.random() * anecdotes.length);
+            selected = getRandomInt(anecdotes.length);
             render();
         });
 
         const h1_anecdoteWithMostVotes = document.createElement('h1');
         h1_anecdoteWithMostVotes.textContent = 'Anecdote with most votes';
         const t_anecdoteWithMostVotes = document.createTextNode(anecdotes[getIndexOfMax()]);
-        const t_mostVotes = document.createTextNode(`has ${Math.max(...votes)} votes`);
+        const t_mostVotes = document.createTextNode(`has ${getMaxVote()} votes`);
 
         root.replaceChildren(
             h1_anecdoteOfTheDay,
