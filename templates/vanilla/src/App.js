@@ -1,6 +1,9 @@
 const App = () => {
     const root = document.createElement('div');
-    root.textContent = 'Hello, world!';
+    const render = () => {
+        root.textContent = 'Hello, world!';
+    };
+    render();
     return root;
 };
 
