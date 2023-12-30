@@ -27,9 +27,14 @@ const App = () => {
 
         const formData = new FormData(form);
         const name = formData.get('name');
-        persons.push({ name });
+
+        if (persons.find((person) => person.name === name)) {
+            alert(`${name} is already added to phonebook`);
+        } else {
+            persons.push({ name });
+            render();
+        }
         form.reset();
-        render();
     });
 
     const render = () => {
