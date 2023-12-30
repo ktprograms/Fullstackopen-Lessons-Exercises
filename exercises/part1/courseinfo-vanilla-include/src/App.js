@@ -9,14 +9,25 @@ const Header = (course) => {
     return root;
 };
 
+const Part = (name, exercises) => {
+    const template = document.querySelector('template[data-component=Part]').content.cloneNode(true);
+    const root = document.createElement('div');
+    root.appendChild(template);
+    const render = () => {
+        root.querySelector('.part_part').textContent = `${name} ${exercises}`;
+    };
+    render();
+    return root;
+};
+
 const Content = (part1, exercises1, part2, exercises2, part3, exercises3) => {
     const template = document.querySelector('template[data-component=Content]').content.cloneNode(true);
     const root = document.createElement('div');
     root.appendChild(template);
     const render = () => {
-        root.querySelector('.content_part1').textContent = `${part1} ${exercises1}`;
-        root.querySelector('.content_part2').textContent = `${part2} ${exercises2}`;
-        root.querySelector('.content_part3').textContent = `${part3} ${exercises3}`;
+        root.querySelector('.content_part1').replaceChildren(Part(part1, exercises1));
+        root.querySelector('.content_part2').replaceChildren(Part(part2, exercises2));
+        root.querySelector('.content_part3').replaceChildren(Part(part3, exercises3));
     };
     render();
     return root;
