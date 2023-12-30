@@ -33,18 +33,18 @@ const Content = (course) => {
     return root;
 };
 
-// const Total = (course) => {
-//     const template = document.querySelector('template[data-component=Total]').content.cloneNode(true);
-//     const root = document.createElement('div');
-//     root.appendChild(template);
-//     const render = () => {
-//         root.querySelector('#total_total').textContent = `Number of exercises ${
-//             course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises
-//         }`;
-//     };
-//     render();
-//     return root;
-// };
+const Total = (course) => {
+    const template = document.querySelector('template[data-component=Total]').content.cloneNode(true);
+    const root = document.createElement('div');
+    root.appendChild(template);
+    const render = () => {
+        root.querySelector('#total_total').textContent = `Number of exercises ${
+            course.parts.map((part) => part.exercises).reduce((acc, n) => acc + n, 0)
+        }`;
+    };
+    render();
+    return root;
+};
 
 const App = () => {
     const course = {
@@ -75,7 +75,7 @@ const App = () => {
     const render = () => {
         root.querySelector('#app_header').replaceChildren(Header(course));
         root.querySelector('#app_content').replaceChildren(Content(course));
-        // root.querySelector('#app_total').replaceChildren(Total(course));
+        root.querySelector('#app_total').replaceChildren(Total(course));
     };
     render();
     return root;
