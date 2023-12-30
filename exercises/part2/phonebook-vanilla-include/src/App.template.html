@@ -1,30 +1,8 @@
-<template data-component="Person">
-</template>
-
 <template data-component="App">
     <h2>Phonebook</h2>
-    <label>
-        filter shown with
-        <input type="text" class="app_filter" />
-    </label>
-    <h2>Add new</h2>
-    <form class="app_form">
-        <div>
-            <label>
-                name:
-                <input type="text" name="name" />
-            </label>
-        </div>
-        <div>
-            <label>
-                number:
-                <input type="tel" name="number" />
-            </label>
-        </div>
-        <div>
-            <button type="submit">add</button>
-        </div>
-    </form>
-    <h2>Numbers</h2>
+    <div class="app_filter"></div>
+    <h3>Add new</h3>
+    <div class="app_personform"></div>
+    <h3>Numbers</h3>
     <div class="app_persons"></div>
 </template>
