@@ -25,26 +25,26 @@ const Content = (course) => {
     const root = document.createElement('div');
     root.appendChild(template);
     const render = () => {
-        root.querySelector('#content_part1').replaceChildren(Part(course.parts[0].name, course.parts[0].exercises));
-        root.querySelector('#content_part2').replaceChildren(Part(course.parts[1].name, course.parts[1].exercises));
-        root.querySelector('#content_part3').replaceChildren(Part(course.parts[2].name, course.parts[2].exercises));
+        root.querySelector('#content_parts').replaceChildren(
+            ...course.parts.map((part) => Part(part.name, part.exercises))
+        );
     };
     render();
     return root;
 };
 
-const Total = (course) => {
-    const template = document.querySelector('template[data-component=Total]').content.cloneNode(true);
-    const root = document.createElement('div');
-    root.appendChild(template);
-    const render = () => {
-        root.querySelector('#total_total').textContent = `Number of exercises ${
-            course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises
-        }`;
-    };
-    render();
-    return root;
-};
+// const Total = (course) => {
+//     const template = document.querySelector('template[data-component=Total]').content.cloneNode(true);
+//     const root = document.createElement('div');
+//     root.appendChild(template);
+//     const render = () => {
+//         root.querySelector('#total_total').textContent = `Number of exercises ${
+//             course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises
+//         }`;
+//     };
+//     render();
+//     return root;
+// };
 
 const App = () => {
     const course = {
@@ -75,7 +75,7 @@ const App = () => {
     const render = () => {
         root.querySelector('#app_header').replaceChildren(Header(course));
         root.querySelector('#app_content').replaceChildren(Content(course));
-        root.querySelector('#app_total').replaceChildren(Total(course));
+        // root.querySelector('#app_total').replaceChildren(Total(course));
     };
     render();
     return root;
