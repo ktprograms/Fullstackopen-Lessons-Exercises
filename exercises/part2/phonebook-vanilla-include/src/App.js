@@ -17,10 +17,17 @@ const App = () => {
             number: '040-1234567',
         },
     ];
+    let filter = '';
 
     const template = document.querySelector('template[data-component=App]').content.cloneNode(true);
     const root = document.createElement('div');
     root.appendChild(template);
+
+    /** @type {HTMLInputElement} */ const input_filter = root.querySelector('.app_filter');
+    input_filter.addEventListener('input', () => {
+        filter = input_filter.value;
+        render();
+    });
 
     /** @type {HTMLFormElement} */ const form = root.querySelector('.app_form');
     form.addEventListener('submit', (event) => {
@@ -40,8 +47,11 @@ const App = () => {
     });
 
     const render = () => {
+        const personsToShow = filter
+            ? persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase()))
+            : persons;
         root.querySelector('.app_persons').replaceChildren(
-            ...persons.map((person) => Person(person.name, person))
+            ...personsToShow.map((person) => Person(person.name, person))
         );
     };
     render();
