@@ -1,3 +1,38 @@
+const Header = (course) => {
+    const template = document.querySelector('template[data-component=Header]').content.cloneNode(true);
+    const root = document.createElement('div');
+    root.appendChild(template);
+    const render = () => {
+        root.querySelector('.header_title').textContent = course;
+    };
+    render();
+    return root;
+};
+
+const Content = (part1, exercises1, part2, exercises2, part3, exercises3) => {
+    const template = document.querySelector('template[data-component=Content]').content.cloneNode(true);
+    const root = document.createElement('div');
+    root.appendChild(template);
+    const render = () => {
+        root.querySelector('.content_part1').textContent = `${part1} ${exercises1}`;
+        root.querySelector('.content_part2').textContent = `${part2} ${exercises2}`;
+        root.querySelector('.content_part3').textContent = `${part3} ${exercises3}`;
+    };
+    render();
+    return root;
+};
+
+const Total = (exercises1, exercises2, exercises3) => {
+    const template = document.querySelector('template[data-component=Total]').content.cloneNode(true);
+    const root = document.createElement('div');
+    root.appendChild(template);
+    const render = () => {
+        root.querySelector('.total_total').textContent = `Number of exercises ${exercises1 + exercises2 + exercises3}`;
+    };
+    render();
+    return root;
+};
+
 const App = () => {
     const course = 'Half Stack application development';
     const part1 = 'Fundamentals of React';
@@ -11,11 +46,9 @@ const App = () => {
     const root = document.createElement('div');
     root.appendChild(template);
     const render = () => {
-        root.querySelector('.title').textContent = course;
-        root.querySelector('.part1').textContent = `${part1} ${exercises1}`;
-        root.querySelector('.part2').textContent = `${part2} ${exercises2}`;
-        root.querySelector('.part3').textContent = `${part3} ${exercises3}`;
-        root.querySelector('.total').textContent = `Number of exercises ${exercises1 + exercises2 + exercises3}`;
+        root.querySelector('.app_header').replaceChildren(Header(course));
+        root.querySelector('.app_content').replaceChildren(Content(part1, exercises1, part2, exercises2, part3, exercises3));
+        root.querySelector('.app_total').replaceChildren(Total(exercises1, exercises2, exercises3));
     };
     render();
     return root;
