@@ -50,8 +50,8 @@ const App = () => {
     const root = document.createElement('div');
     root.appendChild(template);
     const render = () => {
-        root.querySelector('#app_courses').replaceChildren(
-            ...courses.map((course) => Course(course))
+        root.querySelector('.app_courses').replaceChildren(
+            ...courses.map((course) => Course(course.id, course))
         );
     };
     render();
