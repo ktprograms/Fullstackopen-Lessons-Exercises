@@ -1,10 +1,13 @@
+<template data-component="Person">
+</template>
+
 <template data-component="App">
     <h2>Phonebook</h2>
-    <form>
+    <form class="app_form">
         <div>
             <label>
                 name:
-                <input type="text" />
+                <input type="text" name="name" />
             </label>
         </div>
         <div>
@@ -12,5 +15,5 @@
         </div>
     </form>
     <h2>Numbers</h2>
-    <!-- TODO -->
+    <div class="app_persons"></div>
 </template>
