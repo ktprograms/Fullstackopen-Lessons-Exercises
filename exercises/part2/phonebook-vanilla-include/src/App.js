@@ -4,7 +4,7 @@ const Person = (key, person) => {
     root.appendChild(template);
     const render = () => {
         root.dataset.key = key;
-        root.textContent = person.name;
+        root.textContent = `${person.name} ${person.number}`;
     };
     render();
     return root;
@@ -14,6 +14,7 @@ const App = () => {
     let persons = [
         {
             name: 'Arto Hellas',
+            number: '040-1234567',
         },
     ];
 
@@ -27,11 +28,12 @@ const App = () => {
 
         const formData = new FormData(form);
         const name = formData.get('name');
+        const number = formData.get('number');
 
         if (persons.find((person) => person.name === name)) {
             alert(`${name} is already added to phonebook`);
         } else {
-            persons.push({ name });
+            persons.push({ name, number });
             render();
         }
         form.reset();
