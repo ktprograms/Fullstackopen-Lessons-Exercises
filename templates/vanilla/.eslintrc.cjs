@@ -68,7 +68,6 @@ module.exports = {
             'error',
             'always',
         ],
-        'sort-imports': 'error',
         'space-in-parens': [
             'error',
             'never',

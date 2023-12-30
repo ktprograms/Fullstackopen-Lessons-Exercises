@@ -1,8 +1,8 @@
 const App = () => {
+    const template = document.querySelector('template[data-component=App]').content.cloneNode(true);
     const root = document.createElement('div');
-    const render = () => {
-        root.textContent = 'Hello, world!';
-    };
+    root.appendChild(template);
+    const render = () => {};
     render();
     return root;
 };
