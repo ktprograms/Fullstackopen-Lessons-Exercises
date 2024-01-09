@@ -72,8 +72,8 @@ export const Blog = {
     },
 
     createItem(blog) {
-        const el = document.querySelector('#blog').content.cloneNode(true);
-        el.querySelector('.blog').dataset.id = blog.id;
+        const el = document.querySelector('#blog').content.cloneNode(true).firstElementChild;
+        el.dataset.id = blog.id;
 
         el.querySelector('[data-component="title"]').textContent = blog.title;
         el.querySelector('[data-component="author"]').textContent = blog.author;
