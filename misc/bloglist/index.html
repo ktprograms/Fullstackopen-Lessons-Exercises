@@ -12,6 +12,30 @@
       <p id="count">0</p>
       <button id="add">+1</button>
       <hr />
+      <form id="create">
+        <div>
+          <label>
+            Title:
+            <input type="text" name="title" />
+          </label>
+        </div>
+        <div>
+          <label>
+            Author:
+            <input type="text" name="author" />
+          </label>
+        </div>
+        <div>
+          <label>
+            URL:
+            <input type="url" name="url" />
+          </label>
+        </div>
+        <div>
+          <button type="submit">Create</button>
+        </div>
+      </form>
+      <br />
       <!--#include src/components/Blog.template.html-->
       <div id="list"></div>
     </div>

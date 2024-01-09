@@ -38,4 +38,9 @@ export const BlogModel = class extends EventTarget {
     all() {
         return this.blogs;
     }
+
+    create(blog) {
+        this.blogs.push(blog);
+        this.dispatchEvent(new CustomEvent('save'));
+    }
 };
