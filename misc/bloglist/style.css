@@ -5,3 +5,7 @@
     border-width: 1px;
     margin-bottom: 5px;
 }
+
+.hidden {
+    display: none;
+}
