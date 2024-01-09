@@ -9,7 +9,7 @@ export const Blog = {
 
     init() {
         Blog.Model.addEventListener('save', Blog.render);
-        Blog.$.form.addEventListener('submit', function(event) {
+        Blog.$.form.addEventListener('submit', function (event) {
             event.preventDefault();
 
             const formData = new FormData(event.target);
@@ -30,7 +30,7 @@ export const Blog = {
     },
 
     bindItemEvents() {
-        Blog.$.list.addEventListener('click', function(event) {
+        Blog.$.list.addEventListener('click', function (event) {
             if (event.target.matches('[data-component="details"]')) {
                 const el = event.target.closest('[data-id]');
                 Blog.Model.toggleDetails(el.dataset.id);

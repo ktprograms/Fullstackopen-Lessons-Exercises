@@ -9,10 +9,10 @@ export const Counter = {
     },
     Model: new CounterModel(),
     init() {
-        Counter.Model.addEventListener('save', function() {
+        Counter.Model.addEventListener('save', function () {
             Counter.$.displayCount(Counter.Model.get());
         });
-        Counter.$.add.addEventListener('click', function() {
+        Counter.$.add.addEventListener('click', function () {
             Counter.Model.add();
         });
     },

@@ -54,7 +54,7 @@ export const BlogModel = class extends EventTarget {
         const id = String(
             Math.max(
                 ...(
-                    this.blogs.map(function(blog) {
+                    this.blogs.map(function (blog) {
                         return blog.id;
                     })
                 )
@@ -66,7 +66,7 @@ export const BlogModel = class extends EventTarget {
 
     // Frontend state
     toggleDetails(id) {
-        this.blogs = this.blogs.map(function(blog) {
+        this.blogs = this.blogs.map(function (blog) {
             if (blog.id === id) {
                 return { ...blog, detailsShown: !blog.detailsShown };
             } else {
