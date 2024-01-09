@@ -1,6 +1,6 @@
-import CounterModel from '../models/Counter.model';
+import { CounterModel } from '../models/Counter.model';
 
-const Counter = {
+export const Counter = {
     $: {
         add: document.querySelector('#add'),
         displayCount(count) {
@@ -17,5 +17,3 @@ const Counter = {
         });
     },
 };
-
-export default Counter;

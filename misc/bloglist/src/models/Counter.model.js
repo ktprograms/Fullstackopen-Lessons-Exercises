@@ -1,4 +1,4 @@
-class CounterModel extends EventTarget {
+export const CounterModel = class extends EventTarget {
     constructor() {
         super();
         this.count = 0;
@@ -12,6 +12,4 @@ class CounterModel extends EventTarget {
         this.count++;
         this.dispatchEvent(new CustomEvent('save'));
     }
-}
-
-export default CounterModel;
+};
