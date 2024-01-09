@@ -8,7 +8,14 @@ export const Blog = {
     Model: new BlogModel(),
 
     init() {
-        Blog.Model.addEventListener('save', Blog.render);
+        Blog.Model.addEventListener('create', function (event) {
+            Blog.$.list.appendChild(Blog.createItem(event.detail));
+        });
+        Blog.Model.addEventListener('setComment', function (event) {
+            const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
+            el.querySelector('[data-component="comment"]').textContent = event.detail.comment;
+        });
+
         Blog.$.form.addEventListener('submit', function (event) {
             event.preventDefault();
 
@@ -33,7 +40,16 @@ export const Blog = {
         Blog.$.list.addEventListener('click', function (event) {
             if (event.target.matches('[data-component="details"]')) {
                 const el = event.target.closest('[data-id]');
-                Blog.Model.toggleDetails(el.dataset.id);
+
+                const details = event.target;
+                const detailsDiv = el.querySelector('[data-component="details-div"]');
+
+                detailsDiv.classList.toggle('hidden');
+                if (detailsDiv.classList.contains('hidden')) {
+                    details.textContent = 'show';
+                } else {
+                    details.textContent = 'hide';
+                }
             }
         });
         Blog.$.list.addEventListener('submit', function (event) {
@@ -45,7 +61,12 @@ export const Blog = {
                 const first = formData.get('first').trim();
                 const second = formData.get('second').trim();
 
-                Blog.Model.setComment(el.dataset.id, first, second);
+                if (first || second) {
+                    const comment = first ? `first: ${first}` : `second: ${second}`;
+                    Blog.Model.setComment(el.dataset.id, comment);
+                }
+
+                event.target.reset();
             }
         });
     },
@@ -57,20 +78,8 @@ export const Blog = {
         el.querySelector('[data-component="title"]').textContent = blog.title;
         el.querySelector('[data-component="author"]').textContent = blog.author;
 
-        if (blog.detailsShown) {
-            el.querySelector('[data-component="details"]').textContent = 'hide';
-            el.querySelector('[data-component="details-div"]').classList.remove('hidden');
-        } else {
-            el.querySelector('[data-component="details"]').textContent = 'show';
-            el.querySelector('[data-component="details-div"]').classList.add('hidden');
-        }
-
         el.querySelector('[data-component="url"]').textContent = blog.url;
         el.querySelector('[data-component="likes"]').textContent = blog.likes;
-
-        if (blog.comment) {
-            el.querySelector('[data-component="comment"]').textContent = blog.comment;
-        }
 
         return el;
     },

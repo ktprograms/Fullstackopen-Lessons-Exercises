@@ -40,8 +40,26 @@ export const BlogModel = class extends EventTarget {
         ];
     }
 
-    #save() {
-        this.dispatchEvent(new CustomEvent('save'));
+    // Event dispatchers
+    #create(blog) {
+        this.dispatchEvent(
+            new CustomEvent(
+                'create',
+                {
+                    detail: blog,
+                }
+            )
+        );
+    }
+    #setComment(id, comment) {
+        this.dispatchEvent(
+            new CustomEvent(
+                'setComment',
+                {
+                    detail: { id, comment },
+                }
+            )
+        );
     }
 
     // Getters
@@ -60,32 +78,21 @@ export const BlogModel = class extends EventTarget {
                 )
             ) + 1
         );
-        this.blogs.push({ ...blog, id });
-        this.#save();
+        const newBlog = { ...blog, id };
+        this.blogs.push(newBlog);
+        this.#create(newBlog);
     }
-
-    // Frontend state
-    toggleDetails(id) {
+    setComment(id, comment) { // Partial update
         this.blogs = this.blogs.map(function (blog) {
             if (blog.id === id) {
-                return { ...blog, detailsShown: !blog.detailsShown };
-            } else {
-                return blog;
-            }
-        });
-        this.#save();
-    }
-    setComment(id, first, second) {
-        this.blogs = this.blogs.map(function (blog) {
-            if ((blog.id === id) && (first || second)) {
                 return {
                     ...blog,
-                    comment: first ? `first: ${first}` : `second: ${second}`,
+                    comment: comment,
                 };
             } else {
                 return blog;
             }
         });
-        this.#save();
+        this.#setComment(id, comment);
     }
 };
