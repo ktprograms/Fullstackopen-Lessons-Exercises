@@ -25,15 +25,27 @@ export const Blog = {
 
             event.target.reset();
         });
-        Blog.bindItemEvents();
+        Blog.addListEventListeners();
         Blog.render();
     },
 
-    bindItemEvents() {
+    addListEventListeners() {
         Blog.$.list.addEventListener('click', function (event) {
             if (event.target.matches('[data-component="details"]')) {
                 const el = event.target.closest('[data-id]');
                 Blog.Model.toggleDetails(el.dataset.id);
+            }
+        });
+        Blog.$.list.addEventListener('submit', function (event) {
+            if (event.target.matches('form')) {
+                const el = event.target.closest('[data-id]');
+                event.preventDefault();
+
+                const formData = new FormData(event.target);
+                const first = formData.get('first').trim();
+                const second = formData.get('second').trim();
+
+                Blog.Model.setComment(el.dataset.id, first, second);
             }
         });
     },
@@ -55,6 +67,10 @@ export const Blog = {
 
         el.querySelector('[data-component="url"]').textContent = blog.url;
         el.querySelector('[data-component="likes"]').textContent = blog.likes;
+
+        if (blog.comment) {
+            el.querySelector('[data-component="comment"]').textContent = blog.comment;
+        }
 
         return el;
     },

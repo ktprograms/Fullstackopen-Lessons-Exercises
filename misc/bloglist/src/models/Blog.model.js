@@ -75,4 +75,17 @@ export const BlogModel = class extends EventTarget {
         });
         this.#save();
     }
+    setComment(id, first, second) {
+        this.blogs = this.blogs.map(function (blog) {
+            if ((blog.id === id) && (first || second)) {
+                return {
+                    ...blog,
+                    comment: first ? `first: ${first}` : `second: ${second}`,
+                };
+            } else {
+                return blog;
+            }
+        });
+        this.#save();
+    }
 };
