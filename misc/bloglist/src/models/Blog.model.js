@@ -51,12 +51,32 @@ export const BlogModel = class extends EventTarget {
             )
         );
     }
+    #all(blogs) {
+        this.dispatchEvent(
+            new CustomEvent(
+                'all',
+                {
+                    detail: blogs,
+                }
+            )
+        );
+    }
     #setComment(id, comment) {
         this.dispatchEvent(
             new CustomEvent(
                 'setComment',
                 {
                     detail: { id, comment },
+                }
+            )
+        );
+    }
+    #like(id, likes) {
+        this.dispatchEvent(
+            new CustomEvent(
+                'like',
+                {
+                    detail: { id, likes },
                 }
             )
         );
@@ -70,11 +90,6 @@ export const BlogModel = class extends EventTarget {
                 }
             )
         );
-    }
-
-    // Getters
-    all() {
-        return this.blogs;
     }
 
     // Backend operations (CRUD)
@@ -92,6 +107,9 @@ export const BlogModel = class extends EventTarget {
         this.blogs.push(newBlog);
         this.#create(newBlog);
     }
+    all() {
+        this.#all(this.blogs);
+    }
     setComment(id, comment) { // Partial update
         this.blogs = this.blogs.map(function (blog) {
             if (blog.id === id) {
@@ -104,6 +122,23 @@ export const BlogModel = class extends EventTarget {
             }
         });
         this.#setComment(id, comment);
+    }
+    like(id) { // "Atomic" update
+        let newLikes;
+        this.blogs = this.blogs.map(function (blog) {
+            if (blog.id === id) {
+                newLikes = blog.likes + 1;
+                return {
+                    ...blog,
+                    likes: newLikes,
+                };
+            } else {
+                return blog;
+            }
+        });
+        if (newLikes) {
+            this.#like(id, newLikes);
+        }
     }
     remove(id) {
         this.blogs = this.blogs.filter(function (blog) {

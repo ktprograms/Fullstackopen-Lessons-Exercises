@@ -11,9 +11,16 @@ export const Blog = {
         Blog.Model.addEventListener('create', function (event) {
             Blog.$.list.appendChild(Blog.createItem(event.detail));
         });
+        Blog.Model.addEventListener('all', function (event) {
+            Blog.render(event.detail);
+        });
         Blog.Model.addEventListener('setComment', function (event) {
             const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
             el.querySelector('[data-component="comment"]').textContent = event.detail.comment;
+        });
+        Blog.Model.addEventListener('like', function (event) {
+            const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
+            el.querySelector('[data-component="likes"]').textContent = event.detail.likes;
         });
         Blog.Model.addEventListener('remove', function (event) {
             const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
@@ -37,14 +44,13 @@ export const Blog = {
             event.target.reset();
         });
         Blog.addListEventListeners();
-        Blog.render();
+        Blog.Model.all();
     },
 
     addListEventListeners() {
         Blog.$.list.addEventListener('click', function (event) {
+            const el = event.target.closest('[data-id]');
             if (event.target.matches('[data-component="details"]')) {
-                const el = event.target.closest('[data-id]');
-
                 const details = event.target;
                 const detailsDiv = el.querySelector('[data-component="details-div"]');
 
@@ -55,8 +61,9 @@ export const Blog = {
                     details.textContent = 'hide';
                 }
             } else if (event.target.matches('[data-component="delete"]')) {
-                const el = event.target.closest('[data-id]');
                 Blog.Model.remove(el.dataset.id);
+            } else if (event.target.matches('[data-component="like"]')) {
+                Blog.Model.like(el.dataset.id);
             }
         });
         Blog.$.list.addEventListener('submit', function (event) {
@@ -90,12 +97,10 @@ export const Blog = {
 
         return el;
     },
-    render() {
+    render(blogs) {
         Blog.$.list.replaceChildren(
             ...(
-                Blog.Model
-                    .all()
-                    .map(Blog.createItem)
+                blogs.map(Blog.createItem)
             )
         );
     },
