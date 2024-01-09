@@ -15,6 +15,10 @@ export const Blog = {
             const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
             el.querySelector('[data-component="comment"]').textContent = event.detail.comment;
         });
+        Blog.Model.addEventListener('remove', function (event) {
+            const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
+            Blog.$.list.removeChild(el);
+        });
 
         Blog.$.form.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -50,6 +54,9 @@ export const Blog = {
                 } else {
                     details.textContent = 'hide';
                 }
+            } else if (event.target.matches('[data-component="delete"]')) {
+                const el = event.target.closest('[data-id]');
+                Blog.Model.remove(el.dataset.id);
             }
         });
         Blog.$.list.addEventListener('submit', function (event) {

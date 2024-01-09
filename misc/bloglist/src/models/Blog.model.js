@@ -61,6 +61,16 @@ export const BlogModel = class extends EventTarget {
             )
         );
     }
+    #remove(id) {
+        this.dispatchEvent(
+            new CustomEvent(
+                'remove',
+                {
+                    detail: { id },
+                }
+            )
+        );
+    }
 
     // Getters
     all() {
@@ -94,5 +104,11 @@ export const BlogModel = class extends EventTarget {
             }
         });
         this.#setComment(id, comment);
+    }
+    remove(id) {
+        this.blogs = this.blogs.filter(function (blog) {
+            return blog.id !== id;
+        });
+        this.#remove(id);
     }
 };
