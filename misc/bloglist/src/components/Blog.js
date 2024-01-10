@@ -1,48 +1,5 @@
 import { BlogModel } from '../models/Blog.model';
 
-class Item {
-    static $ = {
-        title: '[data-component="title"]',
-        author: '[data-component="author"]',
-        url: '[data-component="url"]',
-        likes: '[data-component="likes"]',
-        comment: '[data-component="comment"]',
-    };
-
-    constructor(el) {
-        this.el = el; // TODO: Prevent direct modification of el - Or not?
-    }
-
-    set visible(visible) {
-        if (visible) {
-            this.el.classList.remove('hidden');
-        } else {
-            this.el.classList.add('hidden');
-        }
-    }
-
-    set id(id) {
-        this.el.dataset.id = id;
-    }
-
-    get title() {
-        return this.el.querySelector(Item.$.title).textContent;
-    }
-
-    set title(title) {
-        this.el.querySelector(Item.$.title).textContent = title;
-    }
-    set author(author) {
-        this.el.querySelector(Item.$.author).textContent = author;
-    }
-    set url(url) {
-        this.el.querySelector(Item.$.url).textContent = url;
-    }
-    set likes(likes) {
-        this.el.querySelector(Item.$.likes).textContent = likes;
-    }
-}
-
 export const Blog = {
     $: {
         list: document.querySelector('#list'),
@@ -71,7 +28,7 @@ export const Blog = {
     init() {
         Blog.addModelEventListeners();
         Blog.addElementEventListeners();
-        Blog.addListItemEventListeners();
+        Blog.addItemEventListeners();
         Blog.Model.all();
     },
 
@@ -85,15 +42,15 @@ export const Blog = {
             Blog.render(event.detail);
         });
         Blog.Model.addEventListener('setComment', function (event) {
-            const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
-            el.querySelector('[data-component="comment"]').textContent = event.detail.comment;
+            const el = Blog.itemFromEvent(event);
+            el.$.comment.textContent = event.detail.comment;
         });
         Blog.Model.addEventListener('like', function (event) {
-            const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
-            el.querySelector('[data-component="likes"]').textContent = event.detail.likes;
+            const el = Blog.itemFromEvent(event);
+            el.$.likes.textContent = event.detail.likes;
         });
         Blog.Model.addEventListener('remove', function (event) {
-            const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
+            const el = Blog.itemFromEvent(event);
             Blog.$.list.removeChild(el);
         });
     },
@@ -122,77 +79,117 @@ export const Blog = {
 
             const els = document.querySelectorAll('.blog');
             els.forEach(function (el) {
-                Blog.filterHideItem(new Item(el), filter);
+                Blog.filterHideElement(el, filter);
             });
         });
     },
-    addListItemEventListeners() {
-        Blog.$.list.addEventListener('click', function (event) {
-            const el = event.target.closest('[data-id]');
-            if (event.target.matches('[data-component="details"]')) {
-                const details = event.target;
-                const detailsDiv = el.querySelector('[data-component="details-div"]');
-
-                detailsDiv.classList.toggle('hidden');
-                if (detailsDiv.classList.contains('hidden')) {
-                    details.textContent = 'show';
-                } else {
-                    details.textContent = 'hide';
+    addItemEventListeners() {
+        function addItemEventListener(event, selector, handler) {
+            Blog.$.list.addEventListener(event, function (event) {
+                const el = event.target.closest('[data-id]');
+                if (event.target.matches(selector)) {
+                    return handler(el, event);
                 }
-            } else if (event.target.matches('[data-component="remove"]')) {
-                // TODO: window.confirm
-                // (seems like there's going to need to be "caching" of the blogs in frontend)
-                // (doesn't make sense to have a GET just to DELETE later)
-                // (But is that good in terms of data consistency? - I guess it's the same as it currently is)
-                Blog.Model.remove(el.dataset.id);
-            } else if (event.target.matches('[data-component="like"]')) {
-                Blog.Model.like(el.dataset.id);
+            });
+        }
+
+        addItemEventListener('click', Blog.$item.details, function (el, event) {
+            const details = event.target;
+
+            el.$.detailsDiv.classList.toggle('hidden');
+            if (el.$.detailsDiv.classList.contains('hidden')) {
+                details.textContent = 'show';
+            } else {
+                details.textContent = 'hide';
             }
         });
-        Blog.$.list.addEventListener('keypress', function (event) {
-            const el = event.target.closest('[data-id]');
+        addItemEventListener('click', Blog.$item.remove, function (el) {
+            // TODO: window.confirm
+            // (seems like there's going to need to be "caching" of the blogs in frontend)
+            // (doesn't make sense to have a GET just to DELETE later)
+            // (But is that good in terms of data consistency? - I guess it's the same as it currently is)
+            Blog.Model.remove(el.dataset.id);
+        });
+        addItemEventListener('click', Blog.$item.like, function (el) {
+            Blog.Model.like(el.dataset.id);
+        });
+
+        addItemEventListener('keypress', Blog.$item.like, function (el, event) {
             const key = event.key;
-            if (event.target.matches('[data-component="like"]') && key === ' ') {
+            if (key === ' ') {
                 event.preventDefault();
                 Blog.Model.like(el.dataset.id);
                 return false;
             }
         });
-        Blog.$.list.addEventListener('submit', function (event) {
-            if (event.target.matches('form')) {
-                const el = event.target.closest('[data-id]');
-                event.preventDefault();
 
-                const formData = new FormData(event.target);
-                const first = formData.get('first').trim();
-                const second = formData.get('second').trim();
+        addItemEventListener('submit', Blog.$item.form, function (el, event) {
+            event.preventDefault();
 
-                if (first || second) {
-                    const comment = first ? `first: ${first}` : `second: ${second}`;
-                    Blog.Model.setComment(el.dataset.id, comment);
-                }
+            const formData = new FormData(event.target);
+            const first = formData.get('first').trim();
+            const second = formData.get('second').trim();
 
-                event.target.reset();
+            if (first || second) {
+                const comment = first ? `first: ${first}` : `second: ${second}`;
+                Blog.Model.setComment(el.dataset.id, comment);
             }
+
+            event.target.reset();
         });
     },
 
-    filterHideItem(item, filter) {
-        item.visible = item.title.toLowerCase().includes(filter.toLowerCase());
+    filterHideElement(el, filter) {
+        const title = el.$.title.textContent;
+        if (title.toLowerCase().includes(filter.toLowerCase())) {
+            el.classList.remove('hidden');
+        } else {
+            el.classList.add('hidden');
+        }
+    },
+
+    $item: {
+        title: '[data-component="title"]',
+        author: '[data-component="author"]',
+        url: '[data-component="url"]',
+        likes: '[data-component="likes"]',
+        comment: '[data-component="comment"]',
+
+        details: '[data-component="details"]',
+        detailsDiv: '[data-component="details-div"]',
+
+        remove: '[data-component="remove"]',
+        like: '[data-component="like"]',
+
+        form: 'form',
+    },
+    asItem(el) {
+        el.$ = {
+            title: el.querySelector(Blog.$item.title),
+            author: el.querySelector(Blog.$item.author),
+            url: el.querySelector(Blog.$item.url),
+            likes: el.querySelector(Blog.$item.likes),
+            comment: el.querySelector(Blog.$item.comment),
+
+            detailsDiv: el.querySelector(Blog.$item.detailsDiv),
+        };
+        return el;
+    },
+    itemFromEvent(event) {
+        return Blog.asItem(Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`));
     },
 
     createItem(blog) {
-        const el = document.querySelector('#blog').content.cloneNode(true).firstElementChild;
-        const item = new Item(el);
-        item.id = blog.id;
-        item.title = blog.title;
-        item.author = blog.author;
-        item.url = blog.url;
-        item.likes = blog.likes;
+        const el = Blog.asItem(document.querySelector('#blog').content.cloneNode(true).firstElementChild);
+        el.dataset.id = blog.id;
+        el.$.title.textContent = blog.title;
+        el.$.author.textContent = blog.author;
+        el.$.url.textContent = blog.url;
+        el.$.likes.textContent = blog.likes;
 
-        Blog.filterHideItem(item, Blog.$.filter.value);
+        Blog.filterHideElement(el, Blog.$.filter.value);
 
-        return item.el;
+        return el;
     },
     render(blogs) {
         Blog.$.list.replaceChildren(
