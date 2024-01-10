@@ -3,11 +3,19 @@ import { BlogModel } from '../models/Blog.model';
 export const Blog = {
     $: {
         list: document.querySelector('#list'),
+        filter: document.querySelector('#filter'),
         form: document.querySelector('#create'),
     },
     Model: new BlogModel(),
 
     init() {
+        Blog.addModelEventListeners();
+        Blog.addElementEventListeners();
+        Blog.addListItemEventListeners();
+        Blog.Model.all();
+    },
+
+    addModelEventListeners() {
         Blog.Model.addEventListener('create', function (event) {
             Blog.$.list.appendChild(Blog.createItem(event.detail));
         });
@@ -26,7 +34,8 @@ export const Blog = {
             const el = Blog.$.list.querySelector(`[data-id="${event.detail.id}"]`);
             Blog.$.list.removeChild(el);
         });
-
+    },
+    addElementEventListeners() {
         Blog.$.form.addEventListener('submit', function (event) {
             event.preventDefault();
 
@@ -43,11 +52,17 @@ export const Blog = {
 
             event.target.reset();
         });
-        Blog.addListEventListeners();
-        Blog.Model.all();
-    },
+        Blog.$.filter.addEventListener('input', function (event) {
+            // Client-side filtering (using DOM values, not directly from model)
+            const filter = event.target.value;
 
-    addListEventListeners() {
+            const els = document.querySelectorAll('.blog');
+            els.forEach(function (el) {
+                Blog.filterHideElement(el, filter);
+            });
+        });
+    },
+    addListItemEventListeners() {
         Blog.$.list.addEventListener('click', function (event) {
             const el = event.target.closest('[data-id]');
             if (event.target.matches('[data-component="details"]')) {
@@ -94,6 +109,15 @@ export const Blog = {
         });
     },
 
+    filterHideElement(el, filter) {
+        const title = el.querySelector('[data-component="title"]').textContent;
+        if (title.toLowerCase().includes(filter.toLowerCase())) {
+            el.classList.remove('hidden');
+        } else {
+            el.classList.add('hidden');
+        }
+    },
+
     createItem(blog) {
         const el = document.querySelector('#blog').content.cloneNode(true).firstElementChild;
         el.dataset.id = blog.id;
@@ -103,6 +127,8 @@ export const Blog = {
 
         el.querySelector('[data-component="url"]').textContent = blog.url;
         el.querySelector('[data-component="likes"]').textContent = blog.likes;
+
+        Blog.filterHideElement(el, Blog.$.filter.value);
 
         return el;
     },
