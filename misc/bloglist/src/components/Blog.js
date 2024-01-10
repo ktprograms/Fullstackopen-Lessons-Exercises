@@ -1,5 +1,48 @@
 import { BlogModel } from '../models/Blog.model';
 
+class Item {
+    static $ = {
+        title: '[data-component="title"]',
+        author: '[data-component="author"]',
+        url: '[data-component="url"]',
+        likes: '[data-component="likes"]',
+        comment: '[data-component="comment"]',
+    };
+
+    constructor(el) {
+        this.el = el; // TODO: Prevent direct modification of el - Or not?
+    }
+
+    set visible(visible) {
+        if (visible) {
+            this.el.classList.remove('hidden');
+        } else {
+            this.el.classList.add('hidden');
+        }
+    }
+
+    set id(id) {
+        this.el.dataset.id = id;
+    }
+
+    get title() {
+        return this.el.querySelector(Item.$.title).textContent;
+    }
+
+    set title(title) {
+        this.el.querySelector(Item.$.title).textContent = title;
+    }
+    set author(author) {
+        this.el.querySelector(Item.$.author).textContent = author;
+    }
+    set url(url) {
+        this.el.querySelector(Item.$.url).textContent = url;
+    }
+    set likes(likes) {
+        this.el.querySelector(Item.$.likes).textContent = likes;
+    }
+}
+
 export const Blog = {
     $: {
         list: document.querySelector('#list'),
@@ -79,7 +122,7 @@ export const Blog = {
 
             const els = document.querySelectorAll('.blog');
             els.forEach(function (el) {
-                Blog.filterHideElement(el, filter);
+                Blog.filterHideItem(new Item(el), filter);
             });
         });
     },
@@ -134,28 +177,22 @@ export const Blog = {
         });
     },
 
-    filterHideElement(el, filter) {
-        const title = el.querySelector('[data-component="title"]').textContent;
-        if (title.toLowerCase().includes(filter.toLowerCase())) {
-            el.classList.remove('hidden');
-        } else {
-            el.classList.add('hidden');
-        }
+    filterHideItem(item, filter) {
+        item.visible = item.title.toLowerCase().includes(filter.toLowerCase());
     },
 
     createItem(blog) {
         const el = document.querySelector('#blog').content.cloneNode(true).firstElementChild;
-        el.dataset.id = blog.id;
+        const item = new Item(el);
+        item.id = blog.id;
+        item.title = blog.title;
+        item.author = blog.author;
+        item.url = blog.url;
+        item.likes = blog.likes;
 
-        el.querySelector('[data-component="title"]').textContent = blog.title;
-        el.querySelector('[data-component="author"]').textContent = blog.author;
+        Blog.filterHideItem(item, Blog.$.filter.value);
 
-        el.querySelector('[data-component="url"]').textContent = blog.url;
-        el.querySelector('[data-component="likes"]').textContent = blog.likes;
-
-        Blog.filterHideElement(el, Blog.$.filter.value);
-
-        return el;
+        return item.el;
     },
     render(blogs) {
         Blog.$.list.replaceChildren(
