@@ -75,7 +75,11 @@ export const Blog = {
                 } else {
                     details.textContent = 'hide';
                 }
-            } else if (event.target.matches('[data-component="delete"]')) {
+            } else if (event.target.matches('[data-component="remove"]')) {
+                // TODO: window.confirm
+                // (seems like there's going to need to be "caching" of the blogs in frontend)
+                // (doesn't make sense to have a GET just to DELETE later)
+                // (But is that good in terms of data consistency? - I guess it's the same as it currently is)
                 Blog.Model.remove(el.dataset.id);
             } else if (event.target.matches('[data-component="like"]')) {
                 Blog.Model.like(el.dataset.id);
