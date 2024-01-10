@@ -1,9 +1,25 @@
+html {
+    color-scheme: light dark;
+}
+
 .blog {
     padding-top: 10px;
     padding-left: 2px;
     border: solid;
     border-width: 1px;
     margin-bottom: 5px;
+}
+
+.like {
+    background-color: gray;
+    padding: 3px 5px;
+    display: inline-block;
+    margin: 2px auto;
+    border-radius: 7px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .hidden {

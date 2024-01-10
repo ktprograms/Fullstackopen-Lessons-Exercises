@@ -66,6 +66,15 @@ export const Blog = {
                 Blog.Model.like(el.dataset.id);
             }
         });
+        Blog.$.list.addEventListener('keypress', function (event) {
+            const el = event.target.closest('[data-id]');
+            const key = event.key;
+            if (event.target.matches('[data-component="like"]') && key === ' ') {
+                event.preventDefault();
+                Blog.Model.like(el.dataset.id);
+                return false;
+            }
+        });
         Blog.$.list.addEventListener('submit', function (event) {
             if (event.target.matches('form')) {
                 const el = event.target.closest('[data-id]');
