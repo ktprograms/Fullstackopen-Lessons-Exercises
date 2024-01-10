@@ -5,6 +5,23 @@ export const Blog = {
         list: document.querySelector('#list'),
         filter: document.querySelector('#filter'),
         form: document.querySelector('#create'),
+        displayNotification(message, isSuccess) {
+            const notification = document.querySelector('.notification');
+            notification.textContent = message;
+
+            if (isSuccess) {
+                notification.classList.remove('notification--error');
+                notification.classList.add('notification--success');
+            } else {
+                notification.classList.remove('notification--success');
+                notification.classList.add('notification--error');
+            }
+
+            notification.classList.remove('hidden');
+            setTimeout(function () {
+                notification.classList.add('hidden');
+            }, 5000);
+        },
     },
     Model: new BlogModel(),
 
@@ -17,7 +34,9 @@ export const Blog = {
 
     addModelEventListeners() {
         Blog.Model.addEventListener('create', function (event) {
-            Blog.$.list.appendChild(Blog.createItem(event.detail));
+            const blog = event.detail;
+            Blog.$.list.appendChild(Blog.createItem(blog));
+            Blog.$.displayNotification(`A new blog ${blog.title} by ${blog.author} added`, true);
         });
         Blog.Model.addEventListener('all', function (event) {
             Blog.render(event.detail);
@@ -48,6 +67,8 @@ export const Blog = {
                     title, author, url,
                     likes: Math.floor(Math.random() * 100),
                 });
+            } else {
+                Blog.$.displayNotification('Title, Author or URL missing', false);
             }
 
             event.target.reset();

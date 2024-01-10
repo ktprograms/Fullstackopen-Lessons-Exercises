@@ -25,3 +25,18 @@ html {
 .hidden {
     display: none;
 }
+
+.notification {
+    background-color: lightgrey;
+    font-size: 1.2rem;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.notification--success {
+    color: green;
+}
+.notification--error {
+    color: red;
+}
