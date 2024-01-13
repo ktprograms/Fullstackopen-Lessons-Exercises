@@ -1,4 +1,4 @@
-import { BlogModel } from '../models/Blog.model';
+import { BlogModel } from '../models/BlogList.model';
 
 export const Blog = {
     $: {

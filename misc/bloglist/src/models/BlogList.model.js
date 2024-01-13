@@ -1,4 +1,4 @@
-export const BlogModel = class extends EventTarget {
+export const Model = class extends EventTarget {
     constructor() {
         super();
         this.blogs = [

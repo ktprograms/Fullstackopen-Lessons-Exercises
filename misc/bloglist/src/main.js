@@ -1,5 +1,7 @@
-import { Blog } from './components/Blog';
+// import { Blog } from './components/Blog';
 import { Counter } from './components/Counter';
+import { Controller as BlogListController } from './controllers/BlogList';
 
-Blog.init();
+// Blog.init();
+BlogListController.init();
 Counter.init();
