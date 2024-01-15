@@ -68,6 +68,13 @@ module.exports = {
             'error',
             'always',
         ],
+        'space-before-function-paren': [
+            'error',
+            {
+                'anonymous': 'always',
+                'named': 'never',
+            },
+        ],
         'space-in-parens': [
             'error',
             'never',
