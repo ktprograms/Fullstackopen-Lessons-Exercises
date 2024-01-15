@@ -1,3 +1,1 @@
-import App from './App';
-
-document.querySelector('#root').appendChild(App());
+document.querySelector('#root').textContent = 'Hello, world!';
