@@ -34,12 +34,26 @@ const View = {
             });
         document.querySelector('#parts').replaceChildren(...children);
     },
+    setTotal(total) {
+        document.querySelector('#total').textContent = total;
+    },
 };
 
 const Controller = {
     init() {
         View.setHeader(course.name);
         View.setParts(course.parts);
+        View.setTotal(Controller.calculateTotal(course.parts));
+    },
+
+    calculateTotal(parts) {
+        return parts
+            .map(function (part) {
+                return part.exercises;
+            })
+            .reduce(function (acc, n) {
+                return acc + n;
+            }, 0);
     },
 };
 
