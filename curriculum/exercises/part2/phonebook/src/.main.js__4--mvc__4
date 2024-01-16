@@ -28,9 +28,6 @@ const View = {
         document.querySelector(`.person[data-id="${id}"]`).textContent = person;
     },
 
-    getFilterValue() {
-        return document.querySelector('input.filter').value;
-    },
     createPerson(id) {
         const person = document.createElement('div');
         person.classList.add('person');
@@ -58,8 +55,8 @@ const Controller = {
         View.registerOnSubmit(Controller.handleSubmit);
     },
 
-    handleFilterInput() {
-        const filter = View.getFilterValue();
+    handleFilterInput(event) {
+        const filter = event.target.value;
 
         View.filterPersons(function (personId) {
             const foundPerson = Model.persons.find(function (person) {
