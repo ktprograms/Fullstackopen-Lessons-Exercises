@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint . --ext js,cjs --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
-    "server": "json-server db.json"
+    "server": "json-server --watch db.json"
   },
   "devDependencies": {
     "eslint": "^8.56.0",
